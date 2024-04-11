@@ -27,7 +27,7 @@ This white paper provides a technical overview on the end-to-end encryption (E2E
 Fig.1: SKISSM software architecture
 </p>
 
-SKISSM provides a in-depth design of E2EE messaging framework extends the Signal protocol[\[1\]](#ref_1)[\[2\]](#ref_2)[\[3\]](#ref_3)[\[4\]](#ref_4) and supports both pre-quantum and post-quantum cryptographic primitives. SKISSM supports asynchronous and out-of-order end-to-end message encryption scheme. It also supports one-to-one messaging and group messaging for registered user with multiple devices. The two crucial security properties are provided:
+SKISSM provides an in-depth design of E2EE messaging framework extends the Signal protocol[\[1\]](#ref_1)[\[2\]](#ref_2)[\[3\]](#ref_3)[\[4\]](#ref_4) and supports both pre-quantum and post-quantum cryptographic primitives. SKISSM supports asynchronous and out-of-order end-to-end message encryption scheme. It also supports one-to-one messaging and group messaging for registered user with multiple devices. The two crucial security properties are provided:
   
 *   **End-to-end encryption**
     
@@ -157,7 +157,7 @@ Fig.4: Account struct
 
 ### ‌Pre-Key Bundle‌
 
-Before a user application can build a outbound session, the “get pre-key bundle” protocol will be used to download a data set that encloses pre-key bundles \[Fig.5\]. To get the pre-key bundles of a peer user with given user\_id, E2EE server will gather a list of pre-key bundles with which is related to each device\_id of the same user\_id. A PreKeyBundle just collects the public part of an identity key, a signed pre-key and an one-time pre-key. The E2EE server will remove the used one-time pre-keys after sending the collected pre-key bundles as a response.
+Before a user application can build an outbound session, the “get pre-key bundle” protocol will be used to download the data set that encloses pre-key bundles \[Fig.5\]. To get the pre-key bundles of a peer user with given user\_id, E2EE server will gather a list of pre-key bundles with which is related to each device\_id of the same user\_id. A PreKeyBundle just collects the public part of an identity key, a signed pre-key and an one-time pre-key. The E2EE server will remove the used one-time pre-keys after sending the collected pre-key bundles as a response.
 
 <p align="center">
 ![image](img/prekey_bundle.svg)
@@ -559,7 +559,7 @@ Fig.21: Accept protocol
 
 #### ‌Send one-to-one message
 
-The send one-to-one message protocol \[Fig.24\] helps send a E2eeMsg data that has “one2one\_msg” as its payload to a remote peer user. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the E2eeMsg data. The peer user will receive this message if this channel is subscribed.
+The send one-to-one message protocol \[Fig.24\] helps send an E2eeMsg data that has “one2one\_msg” as its payload to a remote peer user. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the E2eeMsg data. The peer user will receive this message if this channel is subscribed.
 
   
 <p align="center">
@@ -628,7 +628,7 @@ Fig.29: Leave group protocol
 
 #### ‌Send group message
 
-The send group message protocol \[Fig.30\] helps send a E2eeMsg data that has “group\_msg” as its payload to a remote peer user. E2EE server will create a ProtoMsg by packing the E2eeMsg data and replicate it for each address of all other members. Then publish each E2eeMsg to the server-sent messaging channel. The peer user will receive this message if this channel is subscribed.
+The send group message protocol \[Fig.30\] helps send an E2eeMsg data that has “group\_msg” as its payload to a remote peer user. E2EE server will create a ProtoMsg by packing the E2eeMsg data and replicate it for each address of all other members. Then publish each E2eeMsg to the server-sent messaging channel. The peer user will receive this message if this channel is subscribed.
 
 
 <p align="center">
@@ -712,7 +712,7 @@ A ProtoMsg with E2eeMsg payload \[Fig.37\] is received from server-sent channel 
     
     In the case of group\_msg payload, the message contains “sequence”, “signature”, and “ciphertext” attributes that are related to an outbound group session or inbound group session.
 
-The ciphertext is managed with Double Ratchet Algorithm [\[3\]](#ref_3). SKISSM implement a Plaintext message to mediate the transmission of common message data from user application and group pre-key data from SKISSM. A user application should use Plaintext with “common\_msg” payload. SKISSM will create an inbound group session on receiving a E2eeMsg with GroupPreKeyBundle data as its payload. In this case of E2eeMsg with payload in GroupMsgPayload type should only carry a ciphertext that is encrypted from a Plaintext message with “common\_msg” payload.
+The ciphertext is managed with Double Ratchet Algorithm [\[3\]](#ref_3). SKISSM implement a Plaintext message to mediate the transmission of common message data from user application and group pre-key data from SKISSM. A user application should use Plaintext with “common\_msg” payload. SKISSM will create an inbound group session on receiving an E2eeMsg with GroupPreKeyBundle data as its payload. In this case of E2eeMsg with payload in GroupMsgPayload type should only carry a ciphertext that is encrypted from a Plaintext message with “common\_msg” payload.
 
 <p align="center">
 ![image](img/stream/e2ee_msg.svg)
