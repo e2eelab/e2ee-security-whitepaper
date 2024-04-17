@@ -255,25 +255,25 @@ Fig.8: Invite and accept protocol
 
 To build a new outbound session, Alice first acquires Bob's pre-key bundle from server, then performs the following steps:
 
-*   Verify(Sig, ikB)
+*   Verify(Sig, $ik_B$)
     
-*   Generate ekA (32 bytes key pair) and rkA (32 bytes key pair) in the case of ECC.
+*   Generate $ek_A$ (32 bytes key pair) and $rk_A$ (32 bytes key pair) in the case of ECC.
     
 *   Start calculating the share secrets.
     
-    k2(32 bytes) = ss\_key\_gen(ekA\-1, ikB) in the case of ECC, or just calculate (c2, k2) ←$ Encaps(ikB) in the case of PQC.
+    k2(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $ik_B$) in the case of ECC, or just calculate (c2, k2) ←$ Encaps($ik_B$) in the case of PQC.
     
-    k3(32 bytes) = ss\_key\_gen(ekA\-1, spkB) in the case of ECC, or just calculate (c3, k3) ←$ Encaps(spkB) in the case of PQC.
+    k3(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $spk_B$) in the case of ECC, or just calculate (c3, k3) ←$ Encaps($spk_B$) in the case of PQC.
     
-    k4(32 bytes) = ss\_key\_gen(ekA\-1, opkB) in the case of ECC, or just calculate (c4, k4) ←$ Encaps(opkB) in the case of PQC.
+    k4(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $opk_B$) in the case of ECC, or just calculate (c4, k4) ←$ Encaps($opk_B$) in the case of PQC.
     
 *   Send InviteMsg with pre\_share\_keys: c2, c3, c4.
     
 *   Complete calculating the share secret sk and complete the building of outbound session when AcceptMsg is received.
     
-    k1(32 bytes) = ss\_key\_gen(ikA\-1, spkB) in the case of ECC, or
+    k1(32 bytes) = ss\_key\_gen($ik_A^{-1}$, $spk_B$) in the case of ECC, or
     
-    calculate Decaps(ikA\-1, c1) in the case of PQC where c1 is obtained from the pre\_share\_keys of received AcceptMsg.
+    calculate Decaps($ik_A^{-1}$, c1) in the case of PQC where c1 is obtained from the pre\_share\_keys of received AcceptMsg.
     
     secret(128 bytes) = k1 || k2 || k3 || k4
     
@@ -283,9 +283,9 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
     
     RK(32 bytes) = prefix 32 bytes of sk
     
-    The first ratchet key is just the Bob's signed pre-key. That is, rkB \= spkB
+    The first ratchet key is just the Bob's signed pre-key. That is, $rk_B$ \= $spk_B$
     
-    secret\_input(32 bytes) = ss\_key\_gen(rkA\-1, rkB) in the case of ECC, or calculate Encaps(rkB) in the case of PQC.
+    secret\_input(32 bytes) = ss\_key\_gen($rk_A^{-1}$, $rk_B$) in the case of ECC, or calculate Encaps($rk_B$) in the case of PQC.
     
     Next sk(64 bytes)
     
@@ -297,7 +297,7 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
     
     \= HKDF(sender\_chain\_key, salt\[32\]={0}, info="MessageKeys") C = Enc(P, mk)
     
-*   Send C and rkA to Bob
+*   Send C and $rk_A$ to Bob
     
 
 #### ‌Inbound session creation
@@ -306,13 +306,13 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
     
 *   Calculate share secret using X3DH
     
-    k1 \= ss\_key\_gen(spkB\-1, ikA) in the case of ECC, or just calculate (c1, k1) ←$ Encaps(ikA) in the case of PQC.
+    k1 \= ss\_key\_gen($spk_B^{-1}$, $ik_A$) in the case of ECC, or just calculate (c1, k1) ←$ Encaps($ik_A$) in the case of PQC.
     
-    k2 \= ss\_key\_gen(ikB\-1, ekA) in the case of ECC, or just calculate k2 ← Decaps(ikB\-1, c2) in the case of PQC.
+    k2 \= ss\_key\_gen($ik_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k2 ← Decaps($ik_B^{-1}$, c2) in the case of PQC.
     
-    k3 \= ss\_key\_gen(spkB\-1, ekA) in the case of ECC, or just calculate k3 ← Decaps(spkB\-1, c3) in the case of PQC.
+    k3 \= ss\_key\_gen($spk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k3 ← Decaps($spk_B^{-1}$, c3) in the case of PQC.
     
-    k4 \= ss\_key\_gen(opkB\-1, ekA) in the case of ECC, or just calculate k4 ← Decaps(opkB\-1, c4) in the case of PQC.
+    k4 \= ss\_key\_gen($opk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k4 ← Decaps($opk_B^{-1}$, c4) in the case of PQC.
     
     secret(128 bytes) = k1 || k2 || k3 || k4
     
@@ -322,7 +322,7 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
     
 *   [Apply the Double Ratchet Algorithm](#bookmark113)[\[3\]](#bookmark113)
     
-    RK(32 bytes) = prefix 32 bytes of sk secret\_input(32 bytes) = ss\_key\_gen(rkB\-1, rkA) next sk(64 bytes)
+    RK(32 bytes) = prefix 32 bytes of sk secret\_input(32 bytes) = ss\_key\_gen($rk_B^{-1}$, $rk_A$) next sk(64 bytes)
     
     \= HKDF(secret\_input, salt=RK, info="RATCHET")
     
