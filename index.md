@@ -203,11 +203,13 @@ Fig.7: GroupSession struct
 *   **C**: ciphertext
     
 *   **Dec(x, y)**: decrypt message x with key y using AES256 with GCM mode
-    
-*   **ss\_key\_gen(x, y)**: In the case of elliptic curve Diffie-Hellman key exchange with X25519 algorithm, the calculation return ECDH(x, y) where x is Alice’s private key and y is Bob's public key. In the case of KEM based algorithm, the calculation return k←Decaps(x, y), where x is Alice’s private key and y is came from Bob’s side by calculating (y, k) ←$ Encaps(z) with Alice’s public key z.
+
+*   **Decaps($sk$, C)${\longrightarrow}$ K**: Takes as input a ciphertext C and secret key $sk$ and outputs K
     
 *   **Enc(x, y)**: encrypt message x with key y using AES256 with GCM mode
     
+*   **Encaps($pk$)$\stackrel{\$}{\longrightarrow}$(C, K)**: Takes as input a public key $pk$ and outputs a ciphertext C and the encapsulated key K
+
 *   **ek, ek<sup>-1</sup>**: ephemeral key pair
     
 *   **HKDF(IKM, salt, info)**: HKDF with SHA-256 with input key material IKM, salt, and info
@@ -236,6 +238,8 @@ Fig.7: GroupSession struct
     
 *   **sk\_pub**: signature public key
     
+*   **ss\_key\_gen(x, y)**: In the case of elliptic curve Diffie-Hellman key exchange with X25519 algorithm, the calculation return ECDH(x, y) where x is Alice’s private key and y is Bob's public key. In the case of KEM based algorithm, the calculation return k←Decaps(x, y), where x is Alice’s private key and y is came from Bob’s side by calculating (y, k) $\stackrel{\$}{\longleftarrow}$ Encaps(z) with Alice’s public key z.
+
 *   **Verify(sig, k)**: verify the signature sig with the public key k
     
 
@@ -261,21 +265,21 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
     
 *   Start calculating the share secrets.
     
-    k2(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $ik_B$) in the case of ECC, or just calculate (c2, k2) ←$ Encaps($ik_B$) in the case of PQC.
+    k<sub>2</sub>(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $ik_B$) in the case of ECC, or just calculate (c<sub>2</sub>, k<sub>2</sub>) $\stackrel{\$}{\longleftarrow}$ Encaps($ik_B$) in the case of PQC.
     
-    k3(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $spk_B$) in the case of ECC, or just calculate (c3, k3) ←$ Encaps($spk_B$) in the case of PQC.
+    k<sub>3</sub>(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $spk_B$) in the case of ECC, or just calculate (c<sub>3</sub>, k<sub>3</sub>) $\stackrel{\$}{\longleftarrow}$ Encaps($spk_B$) in the case of PQC.
     
-    k4(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $opk_B$) in the case of ECC, or just calculate (c4, k4) ←$ Encaps($opk_B$) in the case of PQC.
+    k<sub>4</sub>(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $opk_B$) in the case of ECC, or just calculate (c<sub>4</sub>, k<sub>4</sub>) $\stackrel{\$}{\longleftarrow}$ Encaps($opk_B$) in the case of PQC.
     
-*   Send InviteMsg with pre\_share\_keys: c2, c3, c4.
+*   Send InviteMsg with pre\_shared\_input_list: c<sub>2</sub>, c<sub>3</sub>, c<sub>4</sub>.
     
 *   Complete calculating the share secret sk and complete the building of outbound session when AcceptMsg is received.
     
-    k1(32 bytes) = ss\_key\_gen($ik_A^{-1}$, $spk_B$) in the case of ECC, or
+    k<sub>1</sub>(32 bytes) = ss\_key\_gen($ik_A^{-1}$, $spk_B$) in the case of ECC, or
     
-    calculate Decaps($ik_A^{-1}$, c1) in the case of PQC where c1 is obtained from the pre\_share\_keys of received AcceptMsg.
+    calculate Decaps($ik_A^{-1}$, c<sub>1</sub>) in the case of PQC where c<sub>1</sub> is obtained from the encaps\_ciphertext of received AcceptMsg.
     
-    secret(128 bytes) = k1 || k2 || k3 || k4
+    secret(128 bytes) = k<sub>1</sub> || k<sub>2</sub> || k<sub>3</sub> || k<sub>4</sub>
     
     sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”) To encrypt message by using established outbound session:
     
@@ -306,27 +310,31 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
     
 *   Calculate share secret using X3DH
     
-    k1 \= ss\_key\_gen($spk_B^{-1}$, $ik_A$) in the case of ECC, or just calculate (c1, k1) ←$ Encaps($ik_A$) in the case of PQC.
+    k<sub>1</sub> \= ss\_key\_gen($spk_B^{-1}$, $ik_A$) in the case of ECC, or just calculate (c<sub>1</sub>, k<sub>1</sub>) $\stackrel{\$}{\longleftarrow}$ Encaps($ik_A$) in the case of PQC.
     
-    k2 \= ss\_key\_gen($ik_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k2 ← Decaps($ik_B^{-1}$, c2) in the case of PQC.
+    k<sub>2</sub> \= ss\_key\_gen($ik_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k<sub>2</sub> ← Decaps($ik_B^{-1}$, c<sub>2</sub>) in the case of PQC.
     
-    k3 \= ss\_key\_gen($spk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k3 ← Decaps($spk_B^{-1}$, c3) in the case of PQC.
+    k<sub>3</sub> \= ss\_key\_gen($spk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k<sub>3</sub> ← Decaps($spk_B^{-1}$, c<sub>3</sub>) in the case of PQC.
     
-    k4 \= ss\_key\_gen($opk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k4 ← Decaps($opk_B^{-1}$, c4) in the case of PQC.
+    k<sub>4</sub> \= ss\_key\_gen($opk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k<sub>4</sub> ← Decaps($opk_B^{-1}$, c<sub>4</sub>) in the case of PQC.
     
-    secret(128 bytes) = k1 || k2 || k3 || k4
+    secret(128 bytes) = k<sub>1</sub> || k<sub>2</sub> || k<sub>3</sub> || k<sub>4</sub>
     
     sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”)
     
-*   Send AcceptMsg with pre\_shared\_key. In the case of PQC, it will be c1. To decrypt message by using established inbound session:
+*   Send AcceptMsg with encaps\_ciphertext. In the case of PQC, it will be c<sub>1</sub>. To decrypt message by using established inbound session:
     
 *   [Apply the Double Ratchet Algorithm](#bookmark113)[\[3\]](#bookmark113)
     
-    RK(32 bytes) = prefix 32 bytes of sk secret\_input(32 bytes) = ss\_key\_gen($rk_B^{-1}$, $rk_A$) next sk(64 bytes)
+    RK(32 bytes) = prefix 32 bytes of sk secret\_input(32 bytes) = ss\_key\_gen($rk_B^{-1}$, $rk_A$) 
+    
+    next sk(64 bytes)
     
     \= HKDF(secret\_input, salt=RK, info="RATCHET")
     
-    \= next RK(32 bytes) || receiver\_chain\_key(32 bytes) mk(48 bytes)
+    \= next RK(32 bytes) || receiver\_chain\_key(32 bytes)
+    
+    mk(48 bytes)
     
     \= HKDF(receiver\_chain\_key, salt\[32\]={0}, info="MessageKeys") P = Dec(C, mk)
     
