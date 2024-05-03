@@ -100,6 +100,20 @@ SKISSM provides two cipher suites currently:
     Used cryptographic primitives:
     Kyber[\[12\]](#ref_12), SPHINCS+-SHA-256[\[17\]](#ref_17), AES256-GCM, SHA256
 
+### Key Size
+
+|  (bytes)  |  public key  |  secret key  |  ciphertext  |
+| --------- | --------- | -------- | ------- |
+|  kyber512  |  800  |  1632  |  768  |
+|  kyber768  |  1184  |  2400  |  1088  |
+|  kyber1024  |  1568  |  3168  |  1568  |
+
+|  (bytes)  |  secret key  |  public key  |  signature  |
+| --------- | --------- | -------- | ------- |
+|  Dilithium2  |  2528  |  1312  |  2420  |
+|  Dilithium3  |  4000  |  1952  |  3293  |
+|  Dilithium5  |  4864  |  2592  |  4595  |
+
 ### Plugins‌
 
 SKISSM implements a plugin interface to achieve module flexibility for engaging variant application platforms. There are four kinds of plugin handlers \[Fig.2\]:
@@ -449,6 +463,10 @@ A response code indicates the response state from server for requesting a resour
 * RESPONSE\_CODE\_REQUEST\_CONFLICIT
 
     Indicates that the request could not be processed because of conflict in the current state of the resource.
+
+* RESPONSE_CODE_EXPECTATION_FAILED
+
+    The server cannot meet the requirements of the expected request data.
 
 * RESPONSE\_CODE\_INTERNAL\_SERVER\_ERROR
 
