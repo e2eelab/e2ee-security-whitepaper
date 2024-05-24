@@ -3,7 +3,7 @@ toc_min_heading_level: 2
 toc_max_heading_level: 5
 ---
 
-# skissm v1.4.2
+# skissm v1.4.3
 
 SKI software security module.
 
