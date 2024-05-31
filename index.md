@@ -87,18 +87,7 @@ A cipher suite in SKISSM is a software interface constructed by the following cr
 
     Create a hash.
 
-SKISSM provides two cipher suites currently:
-
-* **E2EE\_CIPHER\_ECDH\_X25519\_AES256\_GCM\_SHA256**
-
-    Used cryptographic primitives:
-
-    ECDH-X25519, AES256-GCM, SHA256
-
-* **E2EE\_CIPHER\_KYBER\_SPHINCSPLUS\_SHA256\_256S\_AES256\_GCM\_SHA256**
-
-    Used cryptographic primitives:
-    Kyber[\[12\]](#ref_12), SPHINCS+-SHA-256[\[17\]](#ref_17), AES256-GCM, SHA256
+The default cipher suite in the SKISSM is **E2EE\_CIPHER\_KYBER\_SPHINCSPLUS\_SHA256\_256S\_AES256\_GCM\_SHA256**, which contains Kyber[\[12\]](#ref_12), SPHINCS+-SHA-256[\[17\]](#ref_17), AES256-GCM, SHA256.
 
 ### Key Size
 
@@ -250,7 +239,7 @@ Fig.7: GroupSession struct
 
 #### Invite and accept
 
-Since the calculation of shared key as described in X3DH [\[2\]](#ref_2) is a kind of DH-based protocol with elliptic curve cryptography (ECC). The key agreement process can not complete at Alice’s side alone in the case of applying post quantum cryptographic (PQC) primitives] [\[12\]](#ref_12)[\[13\]](#ref_13)[\[14\]](#ref_14)[\[15\]](#ref_15) that mainly work with key encapsulation mechanisms (KEM) [\[16\]](#ref_16)[\[17\]](#ref_17)[\[18\]](#ref_18). The flow for calculating the shared key for both Alice and Bob is altered by SKISSM \[Fig.8\]. An invite message is sent on creating a new outbound session. The outbound session is not able to send encryption message before receiving an accept message and completing the calculation of shared key. SKISSM implements “invite” and “accept” protocols as a compromise to enable X3DH works in a uniform data flow for both pre quantum and post quantum cryptographic primitives.
+The key agreement process can not complete at Alice’s side alone in the case of applying post quantum cryptographic (PQC) primitives [\[12\]](#ref_12)[\[13\]](#ref_13)[\[14\]](#ref_14)[\[15\]](#ref_15) that mainly work with key encapsulation mechanisms (KEM) [\[16\]](#ref_16)[\[17\]](#ref_17)[\[18\]](#ref_18). The flow for calculating the shared key for both Alice and Bob is altered by SKISSM \[Fig.8\]. An invite message is sent on creating a new outbound session. The outbound session is not able to send encryption message before receiving an accept message and completing the calculation of shared key. SKISSM implements “invite” and “accept” protocols as a compromise to enable PQKA works in a uniform data flow for post quantum cryptographic primitives.
 
 <p align="center">
 ![image](img/invite_accept.svg)
@@ -258,33 +247,53 @@ Since the calculation of shared key as described in X3DH [\[2\]](#ref_2) is a ki
 Fig.8: Invite and accept protocol
 </p>
 
-#### Outbound session creation
+#### PQKA
 
-To build a new outbound session, Alice first acquires Bob's pre-key bundle from server, then performs the following steps:
+To build a new outbound session, Alice first acquires Bob's pre-key bundle from the server, then performs the following steps:
 
 * Verify(Sig, $ik_B$)
 
-* Generate $ek_A$ (32 bytes key pair) and $rk_A$ (32 bytes key pair) in the case of ECC.
+* Generate the base key $rk_A$.
 
-* Start calculating the share secrets.
+* Start calculating the shared secrets.
 
-    k<sub>2</sub>(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $ik_B$) in the case of ECC, or just calculate (c<sub>2</sub>, k<sub>2</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(ik_B)$ in the case of PQC.
+    Calculate (c<sub>2</sub>, k<sub>2</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(ik_B)$.
 
-    k<sub>3</sub>(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $spk_B$) in the case of ECC, or just calculate (c<sub>3</sub>, k<sub>3</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(spk_B)$ in the case of PQC.
+    Calculate (c<sub>3</sub>, k<sub>3</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(spk_B)$.
 
-    k<sub>4</sub>(32 bytes) = ss\_key\_gen($ek_A^{-1}$, $opk_B$) in the case of ECC, or just calculate (c<sub>4</sub>, k<sub>4</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(opk_B)$ in the case of PQC.
+    Calculate (c<sub>4</sub>, k<sub>4</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(opk_B)$.
 
-* Send InviteMsg with pre\_shared\_input_list: c<sub>2</sub>, c<sub>3</sub>, c<sub>4</sub>.
+* Send InviteMsg to Bob with pre\_shared\_input_list: c<sub>2</sub>, c<sub>3</sub>, c<sub>4</sub>.
 
-* Complete calculating the share secret sk and complete the building of outbound session when AcceptMsg is received.
+When Bob receives the InviteMsg from Alice, perform the following steps:
 
-    k<sub>1</sub>(32 bytes) = ss\_key\_gen($ik_A^{-1}$, $spk_B$) in the case of ECC, or
+* Calculate the shared secrets
 
-    calculate Decaps($ik_A^{-1}$, c<sub>1</sub>) in the case of PQC where c<sub>1</sub> is obtained from the encaps\_ciphertext of received AcceptMsg.
+    Calculate (c<sub>1</sub>, k<sub>1</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(ik_A)$.
+
+    Calculate k<sub>2</sub> ← Decaps($ik_B^{-1}$, c<sub>2</sub>).
+
+    Calculate k<sub>3</sub> ← Decaps($spk_B^{-1}$, c<sub>3</sub>).
+
+    Calculate k<sub>4</sub> ← Decaps($opk_B^{-1}$, c<sub>4</sub>).
 
     secret(128 bytes) = k<sub>1</sub> || k<sub>2</sub> || k<sub>3</sub> || k<sub>4</sub>
 
-    sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”) To encrypt message by using established outbound session:
+    sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”)
+
+* Send AcceptMsg with encaps\_ciphertext, which is c<sub>1</sub>.
+
+After Alice receives the AcceptMsg from Bob, she will complete her outbound session by:
+
+* Calculate Decaps($ik_A^{-1}$, c<sub>1</sub>) where c<sub>1</sub> is obtained from the encaps\_ciphertext of received AcceptMsg.
+
+* secret(128 bytes) = k<sub>1</sub> || k<sub>2</sub> || k<sub>3</sub> || k<sub>4</sub>
+
+* sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”).
+
+#### Double Ratchet Algorithm
+
+To encrypt message by using established outbound session:
 
 * [Apply the Double Ratchet Algorithm](#bookmark113)[\[3\]](#bookmark113)
 
@@ -306,25 +315,7 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
 
 * Send C and $rk_A$ to Bob
 
-#### ‌Inbound session creation
-
-    When Bob received an InviteMsg from Alice, Bob can build a new inbound session by performing the following steps:
-
-* Calculate share secret using X3DH
-
-    k<sub>1</sub> \= ss\_key\_gen($spk_B^{-1}$, $ik_A$) in the case of ECC, or just calculate (c<sub>1</sub>, k<sub>1</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(ik_A)$ in the case of PQC.
-
-    k<sub>2</sub> \= ss\_key\_gen($ik_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k<sub>2</sub> ← Decaps($ik_B^{-1}$, c<sub>2</sub>) in the case of PQC.
-
-    k<sub>3</sub> \= ss\_key\_gen($spk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k<sub>3</sub> ← Decaps($spk_B^{-1}$, c<sub>3</sub>) in the case of PQC.
-
-    k<sub>4</sub> \= ss\_key\_gen($opk_B^{-1}$, $ek_A$) in the case of ECC, or just calculate k<sub>4</sub> ← Decaps($opk_B^{-1}$, c<sub>4</sub>) in the case of PQC.
-
-    secret(128 bytes) = k<sub>1</sub> || k<sub>2</sub> || k<sub>3</sub> || k<sub>4</sub>
-
-    sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”)
-
-* Send AcceptMsg with encaps\_ciphertext. In the case of PQC, it will be c<sub>1</sub>. To decrypt message by using established inbound session:
+To decrypt message by using established inbound session:
 
 * [Apply the Double Ratchet Algorithm](#bookmark113)[\[3\]](#bookmark113)
 
