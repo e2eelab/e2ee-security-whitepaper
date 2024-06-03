@@ -253,7 +253,7 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
 
 * Verify(Sig, $ik_B$)
 
-* Generate the base key $rk_A$.
+* Generate the base key $bk_A$.
 
 * Start calculating the shared secrets.
 
@@ -291,45 +291,53 @@ After Alice receives the AcceptMsg from Bob, she will complete her outbound sess
 
 * sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”).
 
-#### Double Ratchet Algorithm
+#### Double Ratchet Algorithm[\[3\]](#bookmark113)
 
-To encrypt message by using established outbound session:
+The double ratchet includes the asymmetric ratchet and the symmetric ratchet. After the session is created or receiving the other's message, we use the asymmetric ratchet to send a message. On the other hand, we use the symmetric ratchet to send a message after sending some messages to the other.
 
-* [Apply the Double Ratchet Algorithm](#bookmark113)[\[3\]](#bookmark113)
+##### Asymmetric Ratchet
 
-    RK(32 bytes) = prefix 32 bytes of sk
+To encrypt a message, we do the following steps:
 
-    The first ratchet key is just the Bob's signed pre-key. That is, $rk_B$ \= $spk_B$
+* RK(32 bytes) = prefix 32 bytes of sk
 
-    secret\_input(32 bytes) = ss\_key\_gen($rk_A^{-1}$, $rk_B$) in the case of ECC, or calculate Encaps($rk_B$) in the case of PQC.
+* Calculate ($rk_A$, secret\_input) $\stackrel{﹩}{\longleftarrow}Encaps(spk_B)$ on Alice's side or ($rk_B$, secret\_input) $\stackrel{﹩}{\longleftarrow}Encaps(bk_A)$ on Bob's side.
 
-    Next sk(64 bytes)
+* Next sk(64 bytes)
 
     \= HKDF(secret\_input, salt=RK, info="RATCHET")
 
     \= next RK(32 bytes) || sender\_chain\_key(32 bytes)
 
-    mk(48 bytes)
+* mk(48 bytes)
 
-    \= HKDF(sender\_chain\_key, salt\[32\]={0}, info="MessageKeys") C = Enc(P, mk)
+    \= HKDF(sender\_chain\_key, salt\[32\]={0}, info="MessageKeys")
 
-* Send C and $rk_A$ to Bob
+* C = Enc(P, mk)
 
-To decrypt message by using established inbound session:
+* Send C and $rk_A$ to Bob or send C and $rk_B$ to Alice.
 
-* [Apply the Double Ratchet Algorithm](#bookmark113)[\[3\]](#bookmark113)
+To decrypt a message, we do the following steps:
 
-    RK(32 bytes) = prefix 32 bytes of sk secret\_input(32 bytes) = ss\_key\_gen($rk_B^{-1}$, $rk_A$) 
+* RK(32 bytes) = prefix 32 bytes of sk
 
-    next sk(64 bytes)
+* secret\_input = Decaps($bk_A^{-1}$, $rk_B$) on Alice's side or Decaps($spk_B^{-1}$, $rk_A$) on Bob's side.
+
+* Next sk(64 bytes)
 
     \= HKDF(secret\_input, salt=RK, info="RATCHET")
 
     \= next RK(32 bytes) || receiver\_chain\_key(32 bytes)
 
-    mk(48 bytes)
+* mk(48 bytes)
 
-    \= HKDF(receiver\_chain\_key, salt\[32\]={0}, info="MessageKeys") P = Dec(C, mk)
+    \= HKDF(receiver\_chain\_key, salt\[32\]={0}, info="MessageKeys")
+    
+* P = Dec(C, mk)
+
+##### Symmetric Ratchet
+
+To perform symmetric ratchet, we generate a new chain key by using the current chain key: $ck_2 = HMAC(ck_1)$. Next, generate the message key by $mk_2 = HKDF(ck_2)$. We then encrypt the message with $mk_2$.
 
 #### Group session creation
 
