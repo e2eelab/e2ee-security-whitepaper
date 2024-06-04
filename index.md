@@ -191,6 +191,8 @@ Fig.7: GroupSession struct
 
 ### ‌Abbreviations‌
 
+* **$bk$**: base key
+
 * **$ck$**: chain key
 
 * **$C$**: ciphertext
@@ -202,8 +204,6 @@ Fig.7: GroupSession struct
 * **$Enc(x, y)$**: encrypt message x with key y using AES256 with GCM mode
 
 * **$Encaps(pk)\stackrel{﹩}{\longrightarrow}(C, K)$**: Takes as input a public key pk and outputs a ciphertext C and the encapsulated key K
-
-* **$ek, ek^{-1}$**: ephemeral key pair
 
 * **$HKDF(IKM, salt, info)$**: HKDF with SHA-256 with input key material IKM, salt, and info
 
@@ -230,8 +230,6 @@ Fig.7: GroupSession struct
 * **$sk\_priv$**: signature private key
 
 * **$sk\_pub$**: signature public key
-
-* **$ss\_key\_gen(x, y)$**: In the case of elliptic curve Diffie-Hellman key exchange with X25519 algorithm, the calculation return ECDH(x, y) where x is Alice’s private key and y is Bob's public key. In the case of KEM based algorithm, the calculation return k←Decaps(x, y), where x is Alice’s private key and y is came from Bob’s side by calculating $(y, k)\stackrel{﹩}{\longleftarrow}Encaps(z)$ with Alice’s public key z.
 
 * **$Verify(sig, k)$**: verify the signature sig with the public key k
 
