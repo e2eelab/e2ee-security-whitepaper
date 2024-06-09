@@ -235,7 +235,7 @@ Fig.7: GroupSession struct
 
 ### ‌‌Algorithms‌
 
-#### Invite and accept
+#### PQKA
 
 The key agreement process can not complete at Alice’s side alone in the case of applying post quantum cryptographic (PQC) primitives [\[12\]](#ref_12)[\[13\]](#ref_13)[\[14\]](#ref_14)[\[15\]](#ref_15) that mainly work with key encapsulation mechanisms (KEM) [\[16\]](#ref_16)[\[17\]](#ref_17)[\[18\]](#ref_18). The flow for calculating the shared key for both Alice and Bob is altered by SKISSM \[Fig.8\]. An invite message is sent on creating a new outbound session. The outbound session is not able to send encryption message before receiving an accept message and completing the calculation of shared key. SKISSM implements “invite” and “accept” protocols as a compromise to enable PQKA works in a uniform data flow for post quantum cryptographic primitives.
 
@@ -244,8 +244,6 @@ The key agreement process can not complete at Alice’s side alone in the case o
 
 Fig.8: Invite and accept protocol
 </p>
-
-#### PQKA
 
 To build a new outbound session, Alice first acquires Bob's pre-key bundle from the server, then performs the following steps:
 
@@ -261,9 +259,9 @@ To build a new outbound session, Alice first acquires Bob's pre-key bundle from 
 
     Calculate (c<sub>4</sub>, k<sub>4</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(opk_B)$.
 
-* Send InviteMsg to Bob with pre\_shared\_input_list: c<sub>2</sub>, c<sub>3</sub>, c<sub>4</sub>.
+* Send [InviteMsg](#ref_‌InviteMsg) to Bob with pre\_shared\_input_list: c<sub>2</sub>, c<sub>3</sub>, c<sub>4</sub>.
 
-When Bob receives the InviteMsg from Alice, perform the following steps:
+When Bob receives the [InviteMsg](#ref_‌InviteMsg) from Alice, perform the following steps:
 
 * Calculate the shared secrets
 
@@ -279,9 +277,9 @@ When Bob receives the InviteMsg from Alice, perform the following steps:
 
     sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”)
 
-* Send AcceptMsg with encaps\_ciphertext, which is c<sub>1</sub>.
+* Send [AcceptMsg](#ref_‌AcceptMsg) with encaps\_ciphertext, which is c<sub>1</sub>.
 
-After Alice receives the AcceptMsg from Bob, she will complete her outbound session by:
+After Alice receives the [AcceptMsg](#ref_‌AcceptMsg) from Bob, she will complete her outbound session by:
 
 * Calculate Decaps($ik_A^{-1}$, c<sub>1</sub>) where c<sub>1</sub> is obtained from the encaps\_ciphertext of received AcceptMsg.
 
@@ -289,7 +287,7 @@ After Alice receives the AcceptMsg from Bob, she will complete her outbound sess
 
 * sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”).
 
-#### Double Ratchet Algorithm[\[3\]](#bookmark113)
+#### Double Ratchet Algorithm[\[3\]](#ref_3)
 
 The double ratchet includes the asymmetric ratchet and the symmetric ratchet. After the session is created or receiving the other's message, we use the asymmetric ratchet to send a message. On the other hand, we use the symmetric ratchet to send a message after sending some messages to the other.
 
@@ -337,7 +335,11 @@ To decrypt a message, we do the following steps:
 
 To perform symmetric ratchet, we generate a new chain key by using the current chain key: $ck_2 = HMAC(ck_1)$. Next, generate the message key by $mk_2 = HKDF(ck_2)$. We then encrypt the message with $mk_2$.
 
-#### Group session creation
+#### Group
+
+We adapt secure group messaging for decentralized networks that have no central authority. We apply DCGKA[\[20\]](#ref_20) to do this.
+
+##### Group session creation
 
 Each group member creates an outbound group session for encrypting and sending group message. On the other hand, the other group members create inbound group session with respect to the outbound group session for decrypting received group message \[Fig.9\].
 
@@ -387,7 +389,7 @@ To decrypt a received inbound group message, Bob and other group members use the
 
 Each group member uses their own inbound group session to ratchet ck for the next decryption.
 
-#### ‌Add group members
+##### ‌Add group members
 
 When a new group member is added to the group, the other old group members need to send their current chain key to the new group member via one-to-one session so that this new group member can create corresponding inbound group sessions. On the other hand, the new group member creates his or her outbound group session with the inviter’s(the one who invites the new group member to join the group) chain key. Since all of the old group members have the inviter’s chain key, they can create the inbound group session that can be used to decrypt the new group member’s group message \[Fig.12\].
 
@@ -397,7 +399,7 @@ When a new group member is added to the group, the other old group members need 
 Fig.12: Add a group member
 </p>
 
-#### ‌Remove group members
+##### ‌Remove group members
 
 When some group members are removed, the group member who makes the changed event will generate a new seed secret and send to other remained group members via one- to-one session, so that all of the remained group members will rebuild group sessions, including outbound and inbound. As a result, all outbound and inbound group sessions will be renewed, and the removed group members has no information about the updated group sessions.
 
@@ -649,7 +651,7 @@ A ProtoMsg with SupplyOpkMsg payload \[Fig.33\] is sent from E2EE server when a 
 Fig.33: SupplyOpkMsg
 </p>
 
-##### ‌InviteMsg
+##### ‌InviteMsg <a name="ref_‌InviteMsg"></a>
 
 A ProtoMsg with InviteMsg payload \[Fig.34\] is received from server-sent channel when some user apply “invite” protocol to E2EE server. SKISSM will create an inbound session and apply “accept” protocol on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
@@ -659,7 +661,7 @@ A ProtoMsg with InviteMsg payload \[Fig.34\] is received from server-sent channe
 Fig.34: InviteMsg‌
 </p>
 
-##### AcceptMsg
+##### AcceptMsg <a name="ref_‌AcceptMsg"></a>
 
 A ProtoMsg with AcceptMsg payload\[Fig.35\] is received from server-sent channel when some user apply “accept” protocol to E2EE server. SKISSM will completing the creation of an outbound session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
@@ -838,3 +840,5 @@ Fig.47: FriendManagerMsg
 18. <a name="ref_18"></a> Keitaro Hashimoto and Shuichi Katsumata and Kris Kwiatkowski and Thomas Prest, “An Efficient and Generic Construction for Signal’s Handshake (X3DH): Post-Quantum, State Leakage Secure, and Deniable”, IACR-JOC, 2022.
 
 19. <a name="ref_19"></a> ‌SKISSM opensource project, https://github.com/e2eelab/skissm
+
+20. <a name="ref_20"></a> Matthew Weidner, Martin Kleppmann, Daniel Hugenroth, Alastair R. Beresford, "Key Agreement for Decentralized Secure Group Messaging with Strong Security Guarantees", 2021.
