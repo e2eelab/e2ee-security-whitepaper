@@ -3,7 +3,7 @@ toc_min_heading_level: 2
 toc_max_heading_level: 5
 ---
 
-# skissm v1.4.3
+# skissm v1.4.4
 
 SKI software security module.
 
@@ -337,7 +337,23 @@ To perform symmetric ratchet, we generate a new chain key by using the current c
 
 #### Group
 
-We adapt secure group messaging for decentralized networks that have no central authority. We apply DCGKA[\[20\]](#ref_20) to do this.
+Secure group messaging protocols have been the subject of much recent cryptographic work. We hope that our group protocol has the following properties:
+
+* Decentralized: Servers may still optionally be used, but they are trusted less.
+
+* Confidentiality: An application message sent by a group member can only be decrypted by users who are also members of the group at the time the message is sent.
+
+* Integrity: Messages cannot be undetectably modified by anyone but the member who sent them.
+
+* Authentication: The sender of a message cannot be forged, and only members can send messages to the group.
+
+* Forward secrecy: After a group member decrypts an application message, an adversary who compromises the private state of that member cannot decrypt that message.
+
+* Post-compromise security(PCS): If an adversary compromises a group member, but the group member retains the ability to send messages, then the adversary cannot decrypt messages sent by any group member who has process the PCS update.
+
+* Efficient: The group creation and group membership change messages have size O(n).
+
+To satisfy these properties, we apply DCGKA[\[20\]](#ref_20) in our group protocol.
 
 ##### Group session creation
 
