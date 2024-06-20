@@ -287,9 +287,9 @@ After Alice receives the [AcceptMsg](#ref_‌AcceptMsg) from Bob, she will compl
 
 * sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”).
 
-#### Double Ratchet Algorithm[\[3\]](#ref_3)
+#### Double Ratchet
 
-The double ratchet includes the asymmetric ratchet and the symmetric ratchet. After the session is created or receiving the other's message, we use the asymmetric ratchet to send a message. On the other hand, we use the symmetric ratchet to send a message after sending some messages to the other.
+The double ratchet algorithm[\[3\]](#ref_3) includes the asymmetric ratchet and the symmetric ratchet. After the session is created or receiving the other's message, we use the asymmetric ratchet to send a message. On the other hand, we use the symmetric ratchet to send a message after sending some messages to the other.
 
 ##### Asymmetric Ratchet
 
@@ -336,26 +336,6 @@ To decrypt a message, we do the following steps:
 To perform symmetric ratchet, we generate a new chain key by using the current chain key: $ck_2 = HMAC(ck_1)$. Next, generate the message key by $mk_2 = HKDF(ck_2)$. We then encrypt the message with $mk_2$.
 
 #### Group
-
-Secure group messaging protocols have been the subject of much recent cryptographic work. We hope that our group protocol has the following properties:
-
-* Decentralized: Servers may still optionally be used, but they are trusted less.
-
-* Confidentiality: An application message sent by a group member can only be decrypted by users who are also members of the group at the time the message is sent.
-
-* Integrity: Messages cannot be undetectably modified by anyone but the member who sent them.
-
-* Authentication: The sender of a message cannot be forged, and only members can send messages to the group.
-
-* Forward secrecy: After a group member decrypts an application message, an adversary who compromises the private state of that member cannot decrypt that message.
-
-* Post-compromise security(PCS): If an adversary compromises a group member, but the group member retains the ability to send messages, then the adversary cannot decrypt messages sent by any group member who has process the PCS update.
-
-* Efficient: The group creation and group membership change messages have size O(n).
-
-To satisfy these properties, we apply DCGKA[\[20\]](#ref_20) in our group protocol.
-
-
 
 Secure group messaging protocols have been the focus of much recent cryptographic work. We referred to the design of DCGKA[\[20\]](#ref_20) to ensure the following properties:
 
