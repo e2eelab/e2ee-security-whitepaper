@@ -287,9 +287,9 @@ After Alice receives the [AcceptMsg](#ref_‌AcceptMsg) from Bob, she will compl
 
 * sk(64 bytes) = HKDF(secret, salt\[32\]={0}, info=“ROOT”).
 
-#### Double Ratchet
+#### One2one message
 
-The double ratchet algorithm[\[3\]](#ref_3) includes the asymmetric ratchet and the symmetric ratchet. After the session is created or receiving the other's message, we use the asymmetric ratchet to send a message. On the other hand, we use the symmetric ratchet to send a message after sending some messages to the other.
+The double ratchet algorithm[\[3\]](#ref_3), comprising the asymmetric ratchet and the symmetric ratchet, is employed for sending One2one messages. After the session is created or receiving the other's message, we use the asymmetric ratchet to send a message. On the other hand, we use the symmetric ratchet to send a message after sending some messages to the other.
 
 ##### Asymmetric Ratchet
 
@@ -335,7 +335,7 @@ To decrypt a message, we do the following steps:
 
 To perform symmetric ratchet, we generate a new chain key by using the current chain key: $ck_2 = HMAC(ck_1)$. Next, generate the message key by $mk_2 = HKDF(ck_2)$. We then encrypt the message with $mk_2$.
 
-#### Group
+#### Group message
 
 Secure group messaging protocols have been the focus of much recent cryptographic work. We referred to the design of DCGKA[\[20\]](#ref_20) to ensure the following properties:
 
@@ -353,7 +353,7 @@ Secure group messaging protocols have been the focus of much recent cryptographi
 
 * Post-Compromise Security (PCS): If a group member is compromised by an adversary but still can send messages, the adversary can't decrypt messages from any group member who has completed the PCS update.
 
-##### Group session creation
+##### Create group
 
 Each group member creates an outbound group session for encrypting and sending group message. On the other hand, the other group members create inbound group session with respect to the outbound group session for decrypting received group message \[Fig.9\].
 
@@ -403,7 +403,7 @@ To decrypt a received inbound group message, Bob and other group members use the
 
 Each group member uses their own inbound group session to ratchet ck for the next decryption.
 
-##### ‌Add group members
+##### ‌Add members
 
 When a new group member is added to the group, the other old group members need to send their current chain key to the new group member via one-to-one session so that this new group member can create corresponding inbound group sessions. On the other hand, the new group member creates his or her outbound group session with the inviter’s(the one who invites the new group member to join the group) chain key. Since all of the old group members have the inviter’s chain key, they can create the inbound group session that can be used to decrypt the new group member’s group message \[Fig.12\].
 
@@ -413,13 +413,13 @@ When a new group member is added to the group, the other old group members need 
 Fig.12: Add a group member
 </p>
 
-##### ‌Remove group members
+##### ‌Remove members
 
 When some group members are removed, the group member who makes the changed event will generate a new seed secret and send to other remained group members via one- to-one session, so that all of the remained group members will rebuild group sessions, including outbound and inbound. As a result, all outbound and inbound group sessions will be renewed, and the removed group members has no information about the updated group sessions.
 
 ## E2EE Protocols‌
 
-SKISSM provides a set of request-response protocols and supports the handling of server- sent messages \[Fig.13\]. These request-response protocols give a direct control and message exchange mechanism to interact with E2EE server for better integration with user application. The server-sent events protocol on the other hand help SKISSM efficiently notified and keep the states of account and sessions updated with the E2EE messaging schemes.
+SKISSM offers offers various request-response protocols and aids in managing server-sent messages \[Fig.13\]. The request-response protocols provide a direct control and message exchange mechanism for interacting with the E2EE server, enabling better integration with user applications. On the other hand, the server-sent events protocol efficiently notifies SKISSM and keeps the states of accounts and sessions updated with the E2EE messaging schemes.
 
 <p align="center">
 ![image](img/protocol.svg)  
