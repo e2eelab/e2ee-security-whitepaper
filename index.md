@@ -41,7 +41,7 @@ The extensible software architecture \[Fig.1\] implemented by SKISSM has been re
 
 ### Cipher Suites
 
-A cipher suite in SKISSM is a software interface constructed by the following cryptographic functions. SKISSM provides an implementation that utilizes the curve25519-donna[\[10\]](#ref_10) and mbed TLS [\[11\]](#ref_11) library.
+A cipher suite in SKISSM is a software interface constructed by the following cryptographic functions. SKISSM provides an implementation that utilizes the curve25519-donna[\[10\]](#ref_10), mbed TLS [\[11\]](#ref_11) library, and PQClean [\[21\]](#ref_21).
 
 * **get\_crypto\_param**
 
@@ -87,7 +87,7 @@ A cipher suite in SKISSM is a software interface constructed by the following cr
 
     Create a hash.
 
-The default cipher suite in the SKISSM is **E2EE\_CIPHER\_KYBER\_SPHINCSPLUS\_SHA256\_256S\_AES256\_GCM\_SHA256**, which contains Kyber[\[12\]](#ref_12), SPHINCS+-SHA-256[\[17\]](#ref_17), AES256-GCM, SHA256.
+The default cipher suite in the SKISSM is **E2EE\_CIPHER\_DILITHIUM5\_KYBER1024\_AES256\_GCM\_SHA2\_256**, which contains Kyber[\[13\]](#ref_13), Dilithium5[\[18\]](#ref_18), AES256-GCM, SHA2-256.
 
 ### Key Size
 
@@ -354,6 +354,24 @@ Secure group messaging protocols have been the subject of much recent cryptograp
 * Efficient: The group creation and group membership change messages have size O(n).
 
 To satisfy these properties, we apply DCGKA[\[20\]](#ref_20) in our group protocol.
+
+
+
+Secure group messaging protocols have been the focus of much recent cryptographic work. We referred to the design of DCGKA[\[20\]](#ref_20) to ensure the following properties:
+
+* Decentralization: Servers may still optionally be used, but they are trusted less.
+
+* Efficiency: The group creation and group membership synchronization have linear complexity.
+
+* Authentication: Only members can send messages to the group, and the sender of a message cannot be forged.
+
+* Confidentiality: The message sent by a group member can only be decrypted by users who are members of the group at the time the message is sent.
+
+* Integrity: Messages cannot be undetectably modified by anyone other than the sender.
+
+* Forward Secrecy: After decrypting a group message, an adversary who compromises the private state of the member can't decrypt it.
+
+* Post-Compromise Security (PCS): If a group member is compromised by an adversary but still can send messages, the adversary can't decrypt messages from any group member who has completed the PCS update.
 
 ##### Group session creation
 
@@ -841,13 +859,13 @@ Fig.47: FriendManagerMsg
 
 11. <a name="ref_11"></a> ARM mbed "mbed TLS", https://tls.mbed.org
 
-12. <a name="ref_12"></a> ‌Kyber, https://pq-crystals.org/kyber/index.shtml
+12. <a name="ref_12"></a>  Post-quantum Cryptography Standardization ‌https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization
 
-13. <a name="ref_13"></a> Classic McEliece, https://classic.mceliece.org/nist.html
+13. <a name="ref_13"></a> ‌Kyber, https://pq-crystals.org/kyber/index.shtml
 
-14. <a name="ref_14"></a> NTRU Prime, https://ntruprime.cr.yp.to/nist.html
+14. <a name="ref_14"></a> Classic McEliece, https://classic.mceliece.org/nist.html
 
-15. <a name="ref_15"></a> SPHINCS+, https://sphincs.org
+15. <a name="ref_15"></a> Dilithium, https://pq-crystals.org/dilithium
 
 16. <a name="ref_16"></a> Jacqueline Brendel , Marc Fischlin , Felix Günther , Christian Janson , Douglas Stebila Authors Info & Claims “Towards Post-Quantum Security for Signal's X3DH Handshake”, Selected Areas in Cryptography: 27th International Conference, Halifax, NS, Canada (Virtual Event), October 21-23, 2020, Revised Selected PapersOct 2020 Pages 404–430.
 
@@ -858,3 +876,5 @@ Fig.47: FriendManagerMsg
 19. <a name="ref_19"></a> ‌SKISSM opensource project, https://github.com/e2eelab/skissm
 
 20. <a name="ref_20"></a> Matthew Weidner, Martin Kleppmann, Daniel Hugenroth, Alastair R. Beresford, "Key Agreement for Decentralized Secure Group Messaging with Strong Security Guarantees", 2021.
+
+21. <a name="ref_21"></a> PQClean, https://github.com/PQClean/PQClean
