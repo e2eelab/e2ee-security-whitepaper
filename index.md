@@ -131,7 +131,7 @@ Fig.2: SKISSM plugin interface
 
 ### ‌Addressing‌
 
-To specify an end point address for end-to-end encryption, SKISSM provides an E2eeAddress struct to represent user address or group address as shown in \[Fig.3\]. An E2eeAddress with PeerUser type is obtained from E2EE server after user registration. The PeerUser data is specified by a user\_id that is created uniquely by server and a device\_id that is provided by user. An alternative E2eeAddress with PeerGroup type is obtained from E2EE server after group creation. The PeerGroup data is specified by a uniquely assigned group\_id from server. The uniqueness of user\_id and group\_id is assured in the scope of the same server domain while the uniqueness of device\_id is kept by user application.
+To specify an end point address for end-to-end encryption, SKISSM provides an E2eeAddress struct to represent user address or group address as shown in \[Fig.3\]. An E2eeAddress with PeerUser type is obtained from E2EE server after user registration. The PeerUser data is specified by a user\_id that is created uniquely by the server and a device\_id that is provided by a user. An alternative E2eeAddress with PeerGroup type is obtained from E2EE server after group creation. The PeerGroup data is specified by a uniquely assigned group\_id from server. The uniqueness of user\_id and group\_id is assured in the scope of the same server domain while the uniqueness of device\_id is kept by user application.
 
 <p align="center">
 ![image](img/e2ee_address.svg)
@@ -177,7 +177,7 @@ Fig.6: Session Struct
 
 A GroupSession struct \[Fig.7\] is used to encapsulate the states of group messaging that will be changed on each encryption or decryption. A group session can be used for handling inbound group messages or outbound group messages. In the case of outbound group session, the “signature\_private\_key” attribute will be created while an inbound group session only make use of “signature\_public\_key”.
 
-An outbound group session is created after a success request of “create group” protocol and returning a unique group address. Then a GroupPreKeyBundle message will be packed as the payload of a Plaintext type message and delivered to each group member through one- to-one session introduced previously. E2EE server then help forwarding the one-to-one message to recipient. Each group member can build inbound group session after processing the decrypted plaintext with “group\_pre\_key” payload. If some one-to-one outbound is not ready for sending message, SKISSM will keep the data in database, and the saved “group\_pre\_key\_plaintext” will be resent automatically after a respective AcceptMsg has been received and successfully create the outbound session.
+An outbound group session is created after a success request of “create group” protocol and returning a unique group address. Then a GroupPreKeyBundle message will be packed as the payload of a Plaintext type message and delivered to each group member through one-to-one session introduced previously. E2EE server then help forwarding the one-to-one message to recipient. Each group member can build inbound group session after processing the decrypted plaintext with “group\_pre\_key” payload. If some one-to-one outbound is not ready for sending message, SKISSM will keep the data in database, and the saved “group\_pre\_key\_plaintext” will be resent automatically after a respective AcceptMsg has been received and successfully create the outbound session.
 
 The group members can be altered by requesting “add group members” and “remove group member” protocol. SKISSM will automatically rebuild the outbound group session if the group members were changed. The inbound group session of each group member will also be rebuilt as a result.
   
@@ -237,7 +237,7 @@ Fig.7: GroupSession struct
 
 #### PQKA
 
-The key agreement process can not complete at Alice’s side alone in the case of applying post quantum cryptographic (PQC) primitives [\[12\]](#ref_12)[\[13\]](#ref_13)[\[14\]](#ref_14)[\[15\]](#ref_15) that mainly work with key encapsulation mechanisms (KEM) [\[16\]](#ref_16)[\[17\]](#ref_17)[\[18\]](#ref_18). The flow for calculating the shared key for both Alice and Bob is altered by SKISSM \[Fig.8\]. An invite message is sent on creating a new outbound session. The outbound session is not able to send encryption message before receiving an accept message and completing the calculation of shared key. SKISSM implements “invite” and “accept” protocols as a compromise to enable PQKA works in a uniform data flow for post quantum cryptographic primitives.
+The key agreement process cannot complete at Alice’s side alone in the case of applying post quantum cryptographic (PQC) primitives [\[12\]](#ref_12)[\[13\]](#ref_13)[\[14\]](#ref_14)[\[15\]](#ref_15) that mainly work with key encapsulation mechanisms (KEM) [\[16\]](#ref_16)[\[17\]](#ref_17)[\[18\]](#ref_18). The flow for calculating the shared key for both Alice and Bob is altered by SKISSM \[Fig.8\]. An invite message is sent on creating a new outbound session. The outbound session is not able to send encrypted messages before receiving an accept message and completing the calculation of shared key. SKISSM implements “invite” and “accept” protocols as a compromise to enable PQKA to work in a uniform data flow for post quantum cryptographic primitives.
 
 <p align="center">
 ![image](img/invite_accept.svg)
@@ -359,7 +359,7 @@ Each group member creates an outbound group session for encrypting and sending g
 
 * The group creator creates an outbound group session by generating a random seed secret(ss). The creator then combines the seed secret with his or her own identity public key to generate a chain key with HKDF.
 
-* The group creator then send the seed secret to each group member by using one-to- one session. Each group member can build their own outbound group session by using the seed secret.
+* The group creator then send the seed secret to each group member by using one-to-one session. Each group member can build their own outbound group session by using the seed secret.
 
 <p align="center">
 ![image](img/group_creation.svg)
@@ -415,7 +415,7 @@ Fig.12: Add a group member
 
 ##### ‌Remove members
 
-When some group members are removed, the group member who makes the changed event will generate a new seed secret and send to other remained group members via one- to-one session, so that all of the remained group members will rebuild group sessions, including outbound and inbound. As a result, all outbound and inbound group sessions will be renewed, and the removed group members has no information about the updated group sessions.
+When some group members are removed, the group member who makes the changed event will generate a new seed secret and send to other remained group members via one-to-one session, so that all of the remained group members will rebuild group sessions, including outbound and inbound. As a result, all outbound and inbound group sessions will be renewed, and the removed group members has no information about the updated group sessions.
 
 ## E2EE Protocols‌
 
