@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>index.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="skissm-v144">skissm v1.4.4</h1>
+<p>SKI software security module.</p>
+<p><img src="img/head.svg" alt="image"></p>
+<p align="center">
+Gen-Cher Lee, Hsuan-Hung Kuo
+<p>January 15, 2024</p>
+<p><img src="img/citi_logo_full.svg" alt="image"></p>
+</p>  
+<h2 id="introduction%E2%80%8C">Introduction‌</h2>
+<p>This white paper provides a technical overview on the end-to-end encryption (E2EE) protocols and security aspects implemented by SKI software security module (SKISSM).</p>
+<p align="center">
+![image](img/skissm_software_architecture.svg)
+<p>Fig.1: SKISSM software architecture</p>
+</p>
+<p>SKISSM provides an in-depth design of E2EE messaging framework extends the Signal protocol<a href="#ref_1">[1]</a><a href="#ref_2">[2]</a><a href="#ref_3">[3]</a><a href="#ref_4">[4]</a> and supports both pre-quantum and post-quantum cryptographic primitives. SKISSM supports asynchronous and out-of-order end-to-end message encryption scheme. It also supports one-to-one messaging and group messaging for registered user with multiple devices. The two crucial security properties are provided:</p>
+<ul>
+<li>
+<p><strong>End-to-end encryption</strong></p>
+<p>Only sender and recipient (and not even the server) can decrypt the content.</p>
+</li>
+<li>
+<p><strong>Forward secrecy</strong></p>
+<p>Past sessions are protected against future compromises of keys or passwords.</p>
+</li>
+</ul>
+<p>The extensible software architecture [Fig.1] implemented by SKISSM has been released as open source project <a href="#ref_19">[19]</a>.</p>
+<h3 id="cipher-suites">Cipher Suites</h3>
+<p>A cipher suite in SKISSM is a software interface constructed by the following cryptographic functions. SKISSM provides an implementation that utilizes the curve25519-donna<a href="#ref_10">[10]</a>, mbed TLS <a href="#ref_11">[11]</a> library, and PQClean <a href="#ref_21">[21]</a>.</p>
+<ul>
+<li>
+<p><strong>get_crypto_param</strong></p>
+<p>Get the parameters of the cipher suite.</p>
+</li>
+<li>
+<p><strong>asym_key_gen</strong></p>
+<p>Generate a random key pair that will be used to calculate shared secret keys.</p>
+</li>
+<li>
+<p><strong>sign_key_gen</strong></p>
+<p>Generate a random key pair that will be used to generate or verify a signature.</p>
+</li>
+<li>
+<p><strong>ss_key_gen</strong></p>
+<p>Calculate shared secret key.</p>
+</li>
+<li>
+<p><strong>encrypt</strong></p>
+<p>Encrypt a given plaintext.</p>
+</li>
+<li>
+<p><strong>decrypt</strong></p>
+<p>Decrypt a given ciphertext.</p>
+</li>
+<li>
+<p><strong>sign</strong></p>
+<p>Sign a message.</p>
+</li>
+<li>
+<p><strong>verify</strong></p>
+<p>Verify a signature with a given message.</p>
+</li>
+<li>
+<p><strong>hkdf</strong></p>
+<p>HMAC-based key derivation function.</p>
+</li>
+<li>
+<p><strong>hmac</strong></p>
+<p>Keyed-Hashing for message authentication.</p>
+</li>
+<li>
+<p><strong>hash</strong></p>
+<p>Create a hash.</p>
+</li>
+</ul>
+<p>The default cipher suite in the SKISSM is <strong>E2EE_CIPHER_DILITHIUM5_KYBER1024_AES256_GCM_SHA2_256</strong>, which contains Kyber<a href="#ref_13">[13]</a>, Dilithium5<a href="#ref_18">[18]</a>, AES256-GCM, SHA2-256.</p>
+<h3 id="key-size">Key Size</h3>
+<table>
+<thead>
+<tr>
+<th>(bytes)</th>
+<th>public key</th>
+<th>secret key</th>
+<th>ciphertext</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kyber512</td>
+<td>800</td>
+<td>1632</td>
+<td>768</td>
+</tr>
+<tr>
+<td>kyber768</td>
+<td>1184</td>
+<td>2400</td>
+<td>1088</td>
+</tr>
+<tr>
+<td>kyber1024</td>
+<td>1568</td>
+<td>3168</td>
+<td>1568</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>(bytes)</th>
+<th>secret key</th>
+<th>public key</th>
+<th>signature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dilithium2</td>
+<td>2528</td>
+<td>1312</td>
+<td>2420</td>
+</tr>
+<tr>
+<td>Dilithium3</td>
+<td>4000</td>
+<td>1952</td>
+<td>3293</td>
+</tr>
+<tr>
+<td>Dilithium5</td>
+<td>4864</td>
+<td>2592</td>
+<td>4595</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plugins%E2%80%8C">Plugins‌</h3>
+<p>SKISSM implements a plugin interface to achieve module flexibility for engaging variant application platforms. There are four kinds of plugin handlers [Fig.2]:</p>
+<p align="center">
+![image](img/plugins.svg)
+<p>Fig.2: SKISSM plugin interface</p>
+</p>
+<ul>
+<li>
+<p><strong>Common handler</strong></p>
+<p>A common handler provides a set of platform dependent functions for generating time stamp, random number, and universally unique identifier (UUID).</p>
+</li>
+<li>
+<p><strong>Event handler</strong></p>
+<p>An event handler is used to receive events form SKISSM while performing E2EE protocol request and processing protocol messages from server. User application can make use of this efficient notification mechanism to catch the changes of states that are maintained by SKISSM.</p>
+</li>
+<li>
+<p><strong>Database handler</strong></p>
+<p>A database handler is provided to help SKISSM keeping data persistency. The state accessibility of user account, one-to-one sessions, and group sessions are finely implemented through a range of database functions.</p>
+</li>
+<li>
+<p><strong>Protocols handler</strong></p>
+<p>The fourth handler is designated to provide a layer of protocol transportation that helps SKISSM forwarding the request messages to E2EE Server. The response message of each request is then propagated back to SKISSM to maintain the states of account and sessions. SKISSM will use the functional interface of database handler to maintain data persistency of affected sessions and account.</p>
+</li>
+</ul>
+<h3 id="%E2%80%8Caddressing%E2%80%8C">‌Addressing‌</h3>
+<p>To specify an end point address for end-to-end encryption, SKISSM provides an E2eeAddress struct to represent user address or group address as shown in [Fig.3]. An E2eeAddress with PeerUser type is obtained from E2EE server after user registration. The PeerUser data is specified by a user_id that is created uniquely by the server and a device_id that is provided by a user. An alternative E2eeAddress with PeerGroup type is obtained from E2EE server after group creation. The PeerGroup data is specified by a uniquely assigned group_id from server. The uniqueness of user_id and group_id is assured in the scope of the same server domain while the uniqueness of device_id is kept by user application.</p>
+<p align="center">
+![image](img/e2ee_address.svg)
+<p>Fig.3: E2eeAddress struct</p>
+</p>
+<h3 id="%E2%80%8Caccount%E2%80%8C">‌Account‌</h3>
+<p>An account keeps user’s address and three types of keys that are used by E2EE schemes. A complete set of keys include a long-term key-pair (IdentityKey), a mid-term key-pair (SignedPreKey), and a bunch (100 as default) of one-time used key-pairs (OneTimePreKey) [Fig.4]. On the stage of user registration, the public part of this set of key-pairs will be uploaded to E2EE server to help together with other peers establish sessions for messaging.</p>
+<p>Moreover, the SignedPreKey has a special time-to-live (ttl) attribute that helps remember the the next renew time. SKISSM implements 7 days as the default renewal time interval. On each begin time of SKISSM activation, the module will check this “ttl”. If it is reached then the “publish signed pre-key” protocol will be requested to submit the public part of newly generated signed pre-key. E2EE server will update the key and use it subsequently to provide clients with PreKeyBundle for creating a new outbound session.</p>
+<p align="center">
+![image](img/account.svg)
+<p>Fig.4: Account struct</p>
+</p>
+<h3 id="%E2%80%8Cpre-key-bundle%E2%80%8C">‌Pre-Key Bundle‌</h3>
+<p>Before a user application can build an outbound session, the “get pre-key bundle” protocol will be used to download the data set that encloses pre-key bundles [Fig.5]. To get the pre-key bundles of a peer user with given user_id, E2EE server will gather a list of pre-key bundles with which is related to each device_id of the same user_id. A PreKeyBundle just collects the public part of an identity key, a signed pre-key and an one-time pre-key. The E2EE server will remove the used one-time pre-keys after sending the collected pre-key bundles as a response.</p>
+<p align="center">
+![image](img/prekey_bundle.svg)
+<p>Fig.5: PreKeyBundle struct</p>
+</p>
+<h3 id="%E2%80%8Csession%E2%80%8C">‌Session‌</h3>
+<p>A Session struct [Fig.6] is used to encapsulate the states of one-to-one messaging that will be changed on each encryption or decryption. A session can be used for handling inbound messages or outbound messages alternatively by setting-up the “from” and “to” address attribute. An outbound session is used to send one-to-one encryption message to remote peer, while an inbound session is used to decrypt the incoming one-to-one message received from remote peer. Specially, An outbound session uses the attribute “responded” as a lock that will be enabled if AcceptMsg is received and complete the shared key calculation.</p>
+<p>Each session has a “ratchet” attribute with Ratchet struct that maintains the ratchet states <a href="#ref_3">[3]</a> for either inbound or outbound usage. If a ratchet is used for managing outbound session, then it will be operated with a sender chain that has ratchet_key to assign that an outbound message belongs to this chain, and a “ratchet” attribute to generate message key for encrypting outbound message. On the other hand, if a ratchet is used for managing inbound session, it will be operated with a receiver chain that has a “ratchet_key_public” attribute to identify the inbound message belongs to this chain, and a “chain_key” attribute to generate message key to decrypt inbound message. The skipped messages chain helps maintain the message key that is skipped while an inbound session is performing decryption task over receiver chain. Moreover, each chain has a max chan index 512 as default by SKISSM. If an outbound session with ratchet of sender chain reaches the limit, a new outbound session will be built as a replacement by using a new PreKeyBundle provided by server.</p>
+<p align="center">
+![image](img/session.svg)
+<p>Fig.6: Session Struct</p>
+</p>
+<h3 id="%E2%80%8Cgroup-session%E2%80%8C">‌Group Session‌</h3>
+<p>A GroupSession struct [Fig.7] is used to encapsulate the states of group messaging that will be changed on each encryption or decryption. A group session can be used for handling inbound group messages or outbound group messages. In the case of outbound group session, the “signature_private_key” attribute will be created while an inbound group session only make use of “signature_public_key”.</p>
+<p>An outbound group session is created after a success request of “create group” protocol and returning a unique group address. Then a GroupPreKeyBundle message will be packed as the payload of a Plaintext type message and delivered to each group member through one-to-one session introduced previously. E2EE server then help forwarding the one-to-one message to recipient. Each group member can build inbound group session after processing the decrypted plaintext with “group_pre_key” payload. If some one-to-one outbound is not ready for sending message, SKISSM will keep the data in database, and the saved “group_pre_key_plaintext” will be resent automatically after a respective AcceptMsg has been received and successfully create the outbound session.</p>
+<p>The group members can be altered by requesting “add group members” and “remove group member” protocol. SKISSM will automatically rebuild the outbound group session if the group members were changed. The inbound group session of each group member will also be rebuilt as a result.</p>
+<p align="center">
+![image](img/group_session.svg)
+<p>Fig.7: GroupSession struct</p>
+</p>
+<h2 id="%E2%80%8Ccryptographic-algorithms%E2%80%8C">‌Cryptographic Algorithms‌</h2>
+<h3 id="%E2%80%8Cabbreviations%E2%80%8C">‌Abbreviations‌</h3>
+<ul>
+<li>
+<p><strong>$bk$</strong>: base key</p>
+</li>
+<li>
+<p><strong>$ck$</strong>: chain key</p>
+</li>
+<li>
+<p><strong>$C$</strong>: ciphertext</p>
+</li>
+<li>
+<p><strong>$Dec(x, y)$</strong>: decrypt message x with key y using AES256 with GCM mode</p>
+</li>
+<li>
+<p><strong>$Decaps(sk, C){\longrightarrow}K$</strong>: Takes as input a ciphertext C and secret key $sk$ and outputs K</p>
+</li>
+<li>
+<p><strong>$Enc(x, y)$</strong>: encrypt message x with key y using AES256 with GCM mode</p>
+</li>
+<li>
+<p><strong>$Encaps(pk)\stackrel{﹩}{\longrightarrow}(C, K)$</strong>: Takes as input a public key pk and outputs a ciphertext C and the encapsulated key K</p>
+</li>
+<li>
+<p><strong>$HKDF(IKM, salt, info)$</strong>: HKDF with SHA-256 with input key material IKM, salt, and info</p>
+</li>
+<li>
+<p><strong>$HMAC(key, input)$</strong>: HMAC with SHA-256 with the key and the input</p>
+</li>
+<li>
+<p><strong>$ik, ik^{-1}$</strong>: identity key pair</p>
+</li>
+<li>
+<p><strong>$mk$</strong>: message key</p>
+</li>
+<li>
+<p><strong>$opk, opk^{-1}$</strong>: one-time pre-key pair</p>
+</li>
+<li>
+<p><strong>$P$</strong>: plaintext</p>
+</li>
+<li>
+<p><strong>$rk, rk^{-1}$</strong>: ratchet key pair</p>
+</li>
+<li>
+<p><strong>$RK$</strong>: root key</p>
+</li>
+<li>
+<p><strong>$Sign(x, y)$</strong>: sign message x with private key y and output the signature sig</p>
+</li>
+<li>
+<p><strong>$spk, spk^{-1}$</strong>: signed pre-key pair</p>
+</li>
+<li>
+<p><strong>$sk$</strong>: shared secret key</p>
+</li>
+<li>
+<p><strong>$sk_priv$</strong>: signature private key</p>
+</li>
+<li>
+<p><strong>$sk_pub$</strong>: signature public key</p>
+</li>
+<li>
+<p><strong>$Verify(sig, k)$</strong>: verify the signature sig with the public key k</p>
+</li>
+</ul>
+<h3 id="%E2%80%8C%E2%80%8Calgorithms%E2%80%8C">‌‌Algorithms‌</h3>
+<h4 id="pqka">PQKA</h4>
+<p>The key agreement process cannot complete at Alice’s side alone in the case of applying post quantum cryptographic (PQC) primitives <a href="#ref_12">[12]</a><a href="#ref_13">[13]</a><a href="#ref_14">[14]</a><a href="#ref_15">[15]</a> that mainly work with key encapsulation mechanisms (KEM) <a href="#ref_16">[16]</a><a href="#ref_17">[17]</a><a href="#ref_18">[18]</a>. The flow for calculating the shared key for both Alice and Bob is altered by SKISSM [Fig.8]. An invite message is sent on creating a new outbound session. The outbound session is not able to send encrypted messages before receiving an accept message and completing the calculation of shared key. SKISSM implements “invite” and “accept” protocols as a compromise to enable PQKA to work in a uniform data flow for post quantum cryptographic primitives.</p>
+<p align="center">
+![image](img/invite_accept.svg)
+<p>Fig.8: Invite and accept protocol</p>
+</p>
+<p>To build a new outbound session, Alice first acquires Bob's pre-key bundle from the server, then performs the following steps:</p>
+<ul>
+<li>
+<p>Verify(Sig, $ik_B$)</p>
+</li>
+<li>
+<p>Generate the base key $bk_A$.</p>
+</li>
+<li>
+<p>Start calculating the shared secrets.</p>
+<p>Calculate (c<sub>2</sub>, k<sub>2</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(ik_B)$.</p>
+<p>Calculate (c<sub>3</sub>, k<sub>3</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(spk_B)$.</p>
+<p>Calculate (c<sub>4</sub>, k<sub>4</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(opk_B)$.</p>
+</li>
+<li>
+<p>Send <a href="#ref_%E2%80%8CInviteMsg">InviteMsg</a> to Bob with pre_shared_input_list: c<sub>2</sub>, c<sub>3</sub>, c<sub>4</sub>.</p>
+</li>
+</ul>
+<p>When Bob receives the <a href="#ref_%E2%80%8CInviteMsg">InviteMsg</a> from Alice, perform the following steps:</p>
+<ul>
+<li>
+<p>Calculate the shared secrets</p>
+<p>Calculate (c<sub>1</sub>, k<sub>1</sub>) $\stackrel{﹩}{\longleftarrow}Encaps(ik_A)$.</p>
+<p>Calculate k<sub>2</sub> ← Decaps($ik_B^{-1}$, c<sub>2</sub>).</p>
+<p>Calculate k<sub>3</sub> ← Decaps($spk_B^{-1}$, c<sub>3</sub>).</p>
+<p>Calculate k<sub>4</sub> ← Decaps($opk_B^{-1}$, c<sub>4</sub>).</p>
+<p>secret(128 bytes) = k<sub>1</sub> || k<sub>2</sub> || k<sub>3</sub> || k<sub>4</sub></p>
+<p>sk(64 bytes) = HKDF(secret, salt[32]={0}, info=“ROOT”)</p>
+</li>
+<li>
+<p>Send <a href="#ref_%E2%80%8CAcceptMsg">AcceptMsg</a> with encaps_ciphertext, which is c<sub>1</sub>.</p>
+</li>
+</ul>
+<p>After Alice receives the <a href="#ref_%E2%80%8CAcceptMsg">AcceptMsg</a> from Bob, she will complete her outbound session by:</p>
+<ul>
+<li>
+<p>Calculate Decaps($ik_A^{-1}$, c<sub>1</sub>) where c<sub>1</sub> is obtained from the encaps_ciphertext of received AcceptMsg.</p>
+</li>
+<li>
+<p>secret(128 bytes) = k<sub>1</sub> || k<sub>2</sub> || k<sub>3</sub> || k<sub>4</sub></p>
+</li>
+<li>
+<p>sk(64 bytes) = HKDF(secret, salt[32]={0}, info=“ROOT”).</p>
+</li>
+</ul>
+<h4 id="one2one-message">One2one message</h4>
+<p>The double ratchet algorithm<a href="#ref_3">[3]</a>, comprising the asymmetric ratchet and the symmetric ratchet, is employed for sending One2one messages. After the session is created or receiving the other's message, we use the asymmetric ratchet to send a message. On the other hand, we use the symmetric ratchet to send a message after sending some messages to the other.</p>
+<h5 id="asymmetric-ratchet">Asymmetric Ratchet</h5>
+<p>To encrypt a message, we do the following steps:</p>
+<ul>
+<li>
+<p>RK(32 bytes) = prefix 32 bytes of sk</p>
+</li>
+<li>
+<p>Calculate ($rk_A$, secret_input) $\stackrel{﹩}{\longleftarrow}Encaps(spk_B)$ on Alice's side or ($rk_B$, secret_input) $\stackrel{﹩}{\longleftarrow}Encaps(bk_A)$ on Bob's side.</p>
+</li>
+<li>
+<p>Next sk(64 bytes)</p>
+<p>= HKDF(secret_input, salt=RK, info=&quot;RATCHET&quot;)</p>
+<p>= next RK(32 bytes) || sender_chain_key(32 bytes)</p>
+</li>
+<li>
+<p>mk(48 bytes)</p>
+<p>= HKDF(sender_chain_key, salt[32]={0}, info=&quot;MessageKeys&quot;)</p>
+</li>
+<li>
+<p>C = Enc(P, mk)</p>
+</li>
+<li>
+<p>Send C and $rk_A$ to Bob or send C and $rk_B$ to Alice.</p>
+</li>
+</ul>
+<p>To decrypt a message, we do the following steps:</p>
+<ul>
+<li>
+<p>RK(32 bytes) = prefix 32 bytes of sk</p>
+</li>
+<li>
+<p>secret_input = Decaps($bk_A^{-1}$, $rk_B$) on Alice's side or Decaps($spk_B^{-1}$, $rk_A$) on Bob's side.</p>
+</li>
+<li>
+<p>Next sk(64 bytes)</p>
+<p>= HKDF(secret_input, salt=RK, info=&quot;RATCHET&quot;)</p>
+<p>= next RK(32 bytes) || receiver_chain_key(32 bytes)</p>
+</li>
+<li>
+<p>mk(48 bytes)</p>
+<p>= HKDF(receiver_chain_key, salt[32]={0}, info=&quot;MessageKeys&quot;)</p>
+</li>
+<li>
+<p>P = Dec(C, mk)</p>
+</li>
+</ul>
+<h5 id="symmetric-ratchet">Symmetric Ratchet</h5>
+<p>To perform symmetric ratchet, we generate a new chain key by using the current chain key: $ck_2 = HMAC(ck_1)$. Next, generate the message key by $mk_2 = HKDF(ck_2)$. We then encrypt the message with $mk_2$.</p>
+<h4 id="group-message">Group message</h4>
+<p>Secure group messaging protocols have been the focus of much recent cryptographic work. We referred to the design of DCGKA<a href="#ref_20">[20]</a> to ensure the following properties:</p>
+<ul>
+<li>
+<p>Decentralization: Servers may still optionally be used, but they are trusted less.</p>
+</li>
+<li>
+<p>Efficiency: The group creation and group membership synchronization have linear complexity.</p>
+</li>
+<li>
+<p>Authentication: Only members can send messages to the group, and the sender of a message cannot be forged.</p>
+</li>
+<li>
+<p>Confidentiality: The message sent by a group member can only be decrypted by users who are members of the group at the time the message is sent.</p>
+</li>
+<li>
+<p>Integrity: Messages cannot be undetectably modified by anyone other than the sender.</p>
+</li>
+<li>
+<p>Forward Secrecy: After decrypting a group message, an adversary who compromises the private state of the member can't decrypt it.</p>
+</li>
+<li>
+<p>Post-Compromise Security (PCS): If a group member is compromised by an adversary but still can send messages, the adversary can't decrypt messages from any group member who has completed the PCS update.</p>
+</li>
+</ul>
+<h5 id="create-group">Create group</h5>
+<p>Each group member creates an outbound group session for encrypting and sending group message. On the other hand, the other group members create inbound group session with respect to the outbound group session for decrypting received group message [Fig.9].</p>
+<ul>
+<li>
+<p>The group creator creates an outbound group session by generating a random seed secret(ss). The creator then combines the seed secret with his or her own identity public key to generate a chain key with HKDF.</p>
+</li>
+<li>
+<p>The group creator then send the seed secret to each group member by using one-to-one session. Each group member can build their own outbound group session by using the seed secret.</p>
+</li>
+</ul>
+<p align="center">
+![image](img/group_creation.svg)
+<p>Fig.9: Group session creation</p>
+</p>
+<p>Also, the server needs to send the group members’ identity public key to all the other group members so that every group member can generate the corresponding inbound group sessions [Fig.10].</p>
+<p align="center">
+![image](img/chainkey_generation.svg)
+<p>Fig.10: Chain key generation</p>
+</p>
+<p>To encrypt and send outbound group message, Alice uses the established outbound group session and performs the following steps [Fig.11]:</p>
+<ul>
+<li>
+<p>mk = HKDF(ck)</p>
+</li>
+<li>
+<p>C = Enc(P, mk)</p>
+</li>
+<li>
+<p>Sig = Sign(C, ik_priv)</p>
+</li>
+<li>
+<p>Send (C, Sig) to each group member</p>
+</li>
+</ul>
+<p>Alice uses the outbound group session to ratchet ck for the next encryption.</p>
+<p align="center">
+![image](img/group_msg_delivery.svg)
+<p>Fig.11: Group message delivery</p>
+</p>
+<p>To decrypt a received inbound group message, Bob and other group members use the established inbound group session and perform the following steps:</p>
+<ul>
+<li>
+<p>Verify(Sig, ik_pub)</p>
+</li>
+<li>
+<p>mk = HKDF(ck)</p>
+</li>
+<li>
+<p>P = Dec(C, mk)</p>
+</li>
+</ul>
+<p>Each group member uses their own inbound group session to ratchet ck for the next decryption.</p>
+<h5 id="%E2%80%8Cadd-members">‌Add members</h5>
+<p>When a new group member is added to the group, the other old group members need to send their current chain key to the new group member via one-to-one session so that this new group member can create corresponding inbound group sessions. On the other hand, the new group member creates his or her outbound group session with the inviter’s(the one who invites the new group member to join the group) chain key. Since all of the old group members have the inviter’s chain key, they can create the inbound group session that can be used to decrypt the new group member’s group message [Fig.12].</p>
+<p align="center">
+![image](img/add_group_members.svg)
+<p>Fig.12: Add a group member</p>
+</p>
+<h5 id="%E2%80%8Cremove-members">‌Remove members</h5>
+<p>When some group members are removed, the group member who makes the changed event will generate a new seed secret and send to other remained group members via one-to-one session, so that all of the remained group members will rebuild group sessions, including outbound and inbound. As a result, all outbound and inbound group sessions will be renewed, and the removed group members has no information about the updated group sessions.</p>
+<h2 id="e2ee-protocols%E2%80%8C">E2EE Protocols‌</h2>
+<p>SKISSM offers offers various request-response protocols and aids in managing server-sent messages [Fig.13]. The request-response protocols provide a direct control and message exchange mechanism for interacting with the E2EE server, enabling better integration with user applications. On the other hand, the server-sent events protocol efficiently notifies SKISSM and keeps the states of accounts and sessions updated with the E2EE messaging schemes.</p>
+<p align="center">
+![image](img/protocol.svg)  
+<p>Fig.13: E2EE protocols</p>
+</p>
+<h3 id="%E2%80%8Crequest-response-protocols%E2%80%8C">‌Request-response protocols‌</h3>
+<h4 id="response-code">Response code</h4>
+<p>A response code indicates the response state from server for requesting a resource from client [Fig.14].</p>
+<ul>
+<li>
+<p>RESPONSE_CODE_UNKNOWN</p>
+<p>The client get a requested response with unknown state.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_OK</p>
+<p>The request succeeded, and some resources were read or updated.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_CREATED</p>
+<p>The request succeeded, and some new resources were created as a result.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_ACCEPTED</p>
+<p>The request has been received but not yet acted upon.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_NO_CONTENT</p>
+<p>There is no content to send for this request, and some resources were deleted.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_BAD_REQUEST</p>
+<p>The server cannot or will not process the request due to something that is perceived to be a client error.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_UNAUTHORIZED</p>
+<p>The client is not authenticated to get the requested response.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_FORBIDDEN</p>
+<p>The client is authenticated but does not have access rights to the content.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_NOT_FOUND</p>
+<p>The server can not find the requested resource.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_REQUEST_TIMEOUT</p>
+<p>The server timed out waiting for the request, or the client timed out waiting for the response.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_REQUEST_CONFLICIT</p>
+<p>Indicates that the request could not be processed because of conflict in the current state of the resource.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_EXPECTATION_FAILED</p>
+<p>The server cannot meet the requirements of the expected request data.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_INTERNAL_SERVER_ERROR</p>
+<p>The server has encountered a situation it does not know how to handle.</p>
+</li>
+<li>
+<p>RESPONSE_CODE_SERVICE_UNAVAILABLE</p>
+<p>The server is down for maintenance or overloaded.</p>
+</li>
+</ul>
+<p align="center">
+![image](img/unary/response_codes.svg)
+<p>Fig.14: Response code</p>
+</p>
+<h4 id="register-user">Register User</h4>
+<p>The register user protocol [Fig.15] helps create a new account in SKISSM by sending RegisterUserRequest data. A unique user address will be returned in a successful response from E2EE server.</p>
+<p align="center">
+![image](img/unary/register.svg)
+<p>Fig.15: Register user protocol</p>
+</p>
+<h4 id="%E2%80%8Cpublish-signed-pre-key">‌Publish signed pre-key</h4>
+<p>The publish signed pre-key protocol [Fig.16] helps submit a new signed pre-key to server when the 7 days renew time is exceed that is managed by Account in SKISSM. E2EE server will keep and replace the old signed pre-key and use the new key to serve the request of “get pre-key bundle” protocol.</p>
+<p align="center">
+![image](img/unary/publish_spk.svg)
+<p>Fig.16: Publish signed pre-key protocol</p>
+</p>
+<h4 id="%E2%80%8Csupply-one-time-pre-key">‌Supply one-time pre-key</h4>
+<p>The supply one-time pre-key protocol [Fig.17] helps submit a set of one-time pre-key public parts to E2EE server. This is normally triggered by receiving a SupplyOpkMsg and notifying that server is running out of one-time pre-keys. SKISSM will create 100 new one-time pre- keys and apply “supply one-time pre-key” protocol to complete the job.</p>
+<p align="center">  
+![image](img/unary/supply_opk.svg)
+<p>Fig.17: Supply one-time pre-key protocol</p>
+</p>
+<h4 id="%E2%80%8Cget-pre-key-bundle">‌Get pre-key bundle</h4>
+<p>The get pre-key bundle protocol [Fig.18] helps download PreKeyBundle for creating a new outbound session. By sending a GetPreKeyBundleRequest data with “user_adress”, E2EE server will return “pre_key_bundles” as an array of PreKeyBundle data. SKISSM will process them and create respective outbound session fro each PreKeyBundle data.</p>
+<p align="center">
+![image](img/unary/get_prekey_bundle.svg)
+<p>Fig.18: Get pre-key bundle protocol</p>
+</p>
+<h4 id="%E2%80%8Cupdate-user">‌Update User</h4>
+<p>The update user protocol [Fig19] helps user update user’s information by sending UpdateUserRequest data. E2EE server authenticate the user_id and publish a ProtoMsg to the server-sent messaging channel by packing the UpdateUserMsg data. The peer users who have applied “invite” protocol to this user_id will receive this message if this channel is subscribed.</p>
+<p align="center">
+![image](img/unary/update_user.svg)
+<p>Fig.19: Update user protocol</p>
+</p>
+<h4 id="%E2%80%8Cinvite">‌Invite</h4>
+<p>The invite protocol [Fig.20] helps send InviteMsg to a peer user while build a new outbound session. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the InviteMsg data. The peer user will receive this message if this channel is subscribed.</p>
+<p align="center">  
+![image](img/unary/invite.svg)  
+<p>Fig.20: Invite protocol</p>
+</p>
+<h4 id="%E2%80%8Caccept">‌Accept</h4>
+<p>The accept protocol [Fig.21] helps send AcceptMsg to a peer user after successfully builds a new inbound session. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the AcceptMsg data. The peer user will receive this message if this channel is subscribed.</p>
+<p align="center">
+![image](img/unary/accept.svg)
+<p>Fig.21: Accept protocol</p>
+</p>
+<h4 id="%E2%80%8Csend-one-to-one-message">‌Send one-to-one message</h4>
+<p>The send one-to-one message protocol [Fig.24] helps send an E2eeMsg data that has “one2one_msg” as its payload to a remote peer user. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the E2eeMsg data. The peer user will receive this message if this channel is subscribed.</p>
+<p align="center">
+![image](img/unary/send_one2one_msg.svg)
+<p>Fig.24: Send one-to-one message protocol</p>
+</p>
+<h4 id="%E2%80%8Ccreate-group">‌Create group</h4>
+<p>The create group protocol [Fig.25] helps send the CreateGroupMsg data while SKISSM is creating a new outbound group session. E2EE server will publish a ProtoMsg to the server- sent messaging channel by packing the CreateGroupMsg data. The peer user will receive this message if this channel is subscribed. SKISSM will send GroupPreKeyBundle data through one-to-one session to other group members after receiving a successful response. On the other hand, SKISSM will help each group member who receives CreateGroupMsg data by creating new outbound group session automatically.</p>
+<p align="center">
+![image](img/unary/create_group.svg)
+<p>Fig.25: Create group protocol</p>
+</p>
+<h4 id="%E2%80%8Cadd-group-members">‌Add group members</h4>
+<p>The add group members protocol [Fig.26] helps send the AddGroupMembersMsg data to other group members. If E2EE server verifies the user sending this request is a group member with manager role, a ProtoMsg will be published to the server-sent messaging channel by packing the AddGroupMembersMsg data. The peer user will receive this message if this channel is subscribed. The old outbound group session will be renewed after a successful response received. On the other hand, all other group members will also renew their old outbound group sessions on receiving the AddGroupMembersMsg data.</p>
+<p align="center">
+![image](img/unary/add_group_members.svg)
+<p>Fig.26: Add group members protocol</p>
+</p>
+<h4 id="%E2%80%8Cremove-group-members">‌Remove group members</h4>
+<p>The remove group members protocol [Fig.27] helps send the RemoveGroupMembersMsg data to other group members. If E2EE server verifies the user sending this request is a group member with manager role, a ProtoMsg will be published to the server-sent messaging channel by packing the RemoveGroupMembersMsg data. The peer user will receive this message if this channel is subscribed. A new outbound group session will be rebuilt after a successful response received. On the other hand, all other group members will also rebuild a new outbound group session on receiving the RemoveGroupMembersMsg data.</p>
+<p align="center">
+![image](img/unary/remove_group_members.svg)
+<p>Fig.27: Remove group members protocol</p>
+</p>
+<h4 id="%E2%80%8Cadd-group-member-device">‌Add group member device</h4>
+<p>The add group member device protocol [Fig.28] helps send the AddGroupMemberDeviceMsg data to other group members. If E2EE server verifies the user sending this request is a group member, a ProtoMsg will be published to the server-sent messaging channel by packing the AddGroupMemberDeviceMsg data. The peer user will receive this message if this channel is subscribed. The old outbound group session will be renewed after a successful response received. On the other hand, all other group members will also renew their old outbound group sessions on receiving the AddGroupMemberDeviceMsg data.</p>
+<p align="center">
+![image](img/unary/add_group_member_device.svg)
+<p>Fig.28: Add group member device protocol</p>
+</p>
+<h4 id="%E2%80%8Cleave-group">‌Leave group</h4>
+<p>The leave group protocol [Fig.29] helps send the LeaveGroupMsg data to the group manager. If E2EE server verifies the user sending this request is a group member, a ProtoMsg will be published to the server-sent messaging channel by packing the LeaveGroupMsg data. The peer user will receive this message if this channel is subscribed. The original outbound and inbound group sessions will be released after a successful response received. On the other hand, the group manager will activate the remove group members protocol on receiving the LeaveGroupMsg data.</p>
+<p align="center">
+![image](img/unary/leave_group.svg)
+<p>Fig.29: Leave group protocol</p>
+</p>
+<h4 id="%E2%80%8Csend-group-message">‌Send group message</h4>
+<p>The send group message protocol [Fig.30] helps send an E2eeMsg data that has “group_msg” as its payload to a remote peer user. E2EE server will create a ProtoMsg by packing the E2eeMsg data and replicate it for each address of all other members. Then publish each E2eeMsg to the server-sent messaging channel. The peer user will receive this message if this channel is subscribed.</p>
+<p align="center">
+![image](img/unary/send_group_msg.svg)
+<p>Fig.30: Send group message protocol</p>
+</p>
+<h4 id="%E2%80%8Cconsume-protomsg">‌Consume ProtoMsg</h4>
+<p>The consume ProtoMsg protocol [Fig.31] helps notify E2EE server that a ProtoMsg with pro_msg_id has been successfully processed by SKISSM. E2EE server will remove the ProtoMsg that is stored in server database and return a successful response.</p>
+<p align="center">
+![image](img/unary/consume_proto_msg.svg)
+<p>Fig.31: Consume ProtoMsg protocol</p>
+</p>
+<h3 id="%E2%80%8Cserver-sent-events-protocols">‌Server-sent events protocols</h3>
+<p>The message sent from E2EE server through the server-sent messaging channel is encapsulated in ProtoMsg struct [Fig.32]. In addition to “from” and “to” address, a ProtoMsg is also tagged with a unique protocol message id and a time stamp by server. The payload of a ProtoMsg is specified by a variety of message types that help SKISSM to manage and update the respective session and account states.</p>
+<p align="center">
+![image](img/stream/proto_msg.svg)
+<p>Fig.32: Message struct of ProtoMsg</p>
+</p>
+<h5 id="%E2%80%8Csupplyopkmsg">‌SupplyOpkMsg</h5>
+<p>A ProtoMsg with SupplyOpkMsg payload [Fig.33] is sent from E2EE server when a user’s one-time pre-keys are running out. SKISSM will apply “supply one-time pre-key” protocol on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/supply_opk_msg.svg)
+<p>Fig.33: SupplyOpkMsg</p>
+</p>
+<h5 id="%E2%80%8Cinvitemsg-a-name%22ref%E2%80%8Cinvitemsg%22a">‌InviteMsg <a name="ref_‌InviteMsg"></a></h5>
+<p>A ProtoMsg with InviteMsg payload [Fig.34] is received from server-sent channel when some user apply “invite” protocol to E2EE server. SKISSM will create an inbound session and apply “accept” protocol on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/invite_msg.svg)
+<p>Fig.34: InviteMsg‌</p>
+</p>
+<h5 id="acceptmsg-a-name%22ref%E2%80%8Cacceptmsg%22a">AcceptMsg <a name="ref_‌AcceptMsg"></a></h5>
+<p>A ProtoMsg with AcceptMsg payload[Fig.35] is received from server-sent channel when some user apply “accept” protocol to E2EE server. SKISSM will completing the creation of an outbound session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/accept_msg.svg)
+<p>Fig.35: AcceptMsg</p>
+</p>
+<h5 id="%E2%80%8Cnewuserdevicemsg">‌NewUserDeviceMsg</h5>
+<p>A ProtoMsg with NewUserDeviceMsg payload [Fig.36] is received from server-sent channel when some user apply “register user” protocol with new “devide_id” for a registered user_id to E2EE server. After a successful authentication, E2EE server will replicate and send this type of message to all the addresses that have been apply “invite” protocol to the same user_id. SKISSM will create a new outbound session by applying “invite” protocol on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/add_user_device_msg.svg)
+<p>Fig.36: NewUserDeviceMsg</p>
+</p>
+<h5 id="%E2%80%8Ce2eemsg">‌E2eeMsg</h5>
+<p>A ProtoMsg with E2eeMsg payload [Fig.37] is received from server-sent channel when some user apply “send one2one message” or “send group message” protocol to E2EE server. SKISSM establish E2eeMsg as the main message struct to carry out the transmission of E2EE messages. An E2eeMsg data has a “session_id” attribute that is related to the working session. The session can be type of an outbound session, inbound session, outbound group session, or inbound group session. In addition to the “to” and “from” attributes that specify the source and destination address, a payload attribute can be chosen from two types:</p>
+<ul>
+<li>
+<p>One2oneMsgPayload</p>
+<p>In the case of one2one_msg payload, the message contains “sequence”, “ratchet_key”, and “ciphertext” attributes that are related to an outbound session or inbound session.</p>
+</li>
+<li>
+<p>GroupMsgPayload</p>
+<p>In the case of group_msg payload, the message contains “sequence”, “signature”, and “ciphertext” attributes that are related to an outbound group session or inbound group session.</p>
+</li>
+</ul>
+<p>The ciphertext is managed with Double Ratchet Algorithm <a href="#ref_3">[3]</a>. SKISSM implement a Plaintext message to mediate the transmission of common message data from user application and group pre-key data from SKISSM. A user application should use Plaintext with “common_msg” payload. SKISSM will create an inbound group session on receiving an E2eeMsg with GroupPreKeyBundle data as its payload. In this case of E2eeMsg with payload in GroupMsgPayload type should only carry a ciphertext that is encrypted from a Plaintext message with “common_msg” payload.</p>
+<p align="center">
+![image](img/stream/e2ee_msg.svg)
+<p>Fig.37: E2eeMsg struct</p>
+</p>
+<h5 id="%E2%80%8Ccreategroupmsg">‌CreateGroupMsg</h5>
+<p>A ProtoMsg with CreateGroupMsg payload [Fig.38] is received from server-sent channel when some user apply “create group” protocol to E2EE server. SKISSM will create a new outbound group session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/create_group_msg.svg)  
+<p>Fig.38: CreateGroupMsg</p>
+</p>
+<h5 id="%E2%80%8Caddgroupmembersmsg">‌AddGroupMembersMsg</h5>
+<p>A ProtoMsg with AddGroupMembers payload [Fig.39] is received from server-sent channel some group member with manager role apply “add group members” protocol to E2EE server. SKISSM will update the original group sessions on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/add_group_members_msg.svg)
+<p>Fig.39: AddGroupMembersMsg</p>
+</p>
+<h5 id="%E2%80%8Cremovegroupmembersmsg">‌RemoveGroupMembersMsg</h5>
+<p>A ProtoMsg with RemoveGroupMembers payload [Fig.40] is received from server-sent channel when some group member with manager role apply “remove group members” protocol to E2EE server. SKISSM will create a new outbound group session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/remove_group_members_msg.svg)
+<p>Fig.40: RemoveGroupMembersMsg</p>
+</p>
+<h5 id="%E2%80%8Caddgroupmemberdevicemsg">‌AddGroupMemberDeviceMsg</h5>
+<p>A ProtoMsg with AddGroupMemberDeviceMsg payload [Fig.41] is received from server-sent channel when some group member with manager role apply “add group member device” protocol to E2EE server. SKISSM will update the group session with the same group address on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/add_group_member_device_msg.svg)
+<p>Fig.41: AddGroupMemberDeviceMsg</p>
+</p>
+<h5 id="%E2%80%8Cleavegroupmsg">‌LeaveGroupMsg</h5>
+<p>A ProtoMsg with LeaveGroupMsg payload [Fig.42] is received from server-sent channel when some group member applies “leave group” protocol to E2EE server. SKISSM will create a new outbound group session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/leave_group_msg.svg)
+<p>Fig.42: LeaveGroupMsg</p>
+</p>
+<h5 id="%E2%80%8Cserverheartbeatmsg">‌ServerHeartbeatMsg</h5>
+<p>A ProtoMsg with ServerHertbeatMsg payload [Fig.43] is received from server-sent channel in a time interval periodically. User application can keep noticed about service availability. It is not needed to report the consumption state of this message type.</p>
+<p align="center">
+![image](img/stream/server_heartbeat_msg.svg)
+<p>Fig.43: ServerHeartbeatMsg</p>
+</p>
+<h5 id="%E2%80%8Cupdateusermsg">‌UpdateUserMsg</h5>
+<p>A ProtoMsg with UpdateUserMsg payload [Fig.44] is received from server-sent channel when some user apply “update user” protocol to E2EE server. All the users that have apply “invite” protocol to this user will receive this message. User application just update the user information on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/update_user_msg.svg)
+<p>Fig.44: UpdateUserMsg</p>
+</p>
+<h5 id="%E2%80%8Cgroupmanagermsg">‌GroupManagerMsg</h5>
+<p>A ProtoMsg with GroupManagerMsg payload [Fig.45] is sent from E2EE server when there is a group notification to be delivered. User application will get notified on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/group_manager_msg.svg)  
+<p>Fig.45: GroupManagerMsg</p>
+</p>
+<h5 id="%E2%80%8Csystemmanagermsg">‌SystemManagerMsg</h5>
+<p>A ProtoMsg with SystemManagerMsg payload [Fig.46] is sent from E2EE server when there is a system notification to be delivered. User application will get notified on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/system_manager_msg.svg)  
+<p>Fig.46: SystemManagerMsg</p>
+</p>
+<h5 id="%E2%80%8Cfriendmanagermsg">‌FriendManagerMsg</h5>
+<p>A ProtoMsg with FriendManagerMsg payload [Fig.47] is sent from E2EE server when there is a friend operation to be delivered. User application will get notified on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.</p>
+<p align="center">
+![image](img/stream/friend_manager_msg.svg)
+<p>Fig.47: FriendManagerMsg</p>
+</p>
+<h2 id="references%E2%80%8C">References‌</h2>
+<ol>
+<li>
+<p><a name="ref_1"></a> Trevor Perrin (editor) &quot;The XEdDSA and VXEdDSA Signature Schemes&quot;, Revision 1, 2016-10-20. https://signal.org/docs/specifications/xeddsa/</p>
+</li>
+<li>
+<p><a name="ref_2"></a> Moxie Marlinspike, Trevor Perrin (editor) &quot;The X3DH Key Agreement Protocol&quot;, Revision 1, 2016-11-04. https://signal.org/docs/specifications/x3dh/</p>
+</li>
+<li>
+<p><a name="ref_3"></a> Moxie Marlinspike, Trevor Perrin (editor) &quot;The Double Ratchet Algorithm&quot;, Revision 1, 2016-11-20. https://signal.org/docs/specifications/doubleratchet/</p>
+</li>
+<li>
+<p><a name="ref_4"></a> Moxie Marlinspike, Trevor Perrin (editor) &quot;The Sesame Algorithm: Session Management for Asynchronous Message Encryption&quot;, Revision 2, 2017-04-14. https://signal.org/docs/ specifications/sesame/</p>
+</li>
+<li>
+<p><a name="ref_5"></a> Proto3 Language Guide, https://developers.google.com/protocol-buffers/docs/proto3</p>
+</li>
+<li>
+<p><a name="ref_6"></a> A. Langley, M. Hamburg, and S. Turner &quot;Elliptic Curves for Security&quot;, Internet Engineering Task Force; RFC 7748 (Informational); IETF, Jan-2016. http://www.ietf.org/rfc/ rfc7748.txt</p>
+</li>
+<li>
+<p><a name="ref_7"></a> S. Josefsson and I. Liusvaara &quot;Edwards-Curve Digital Signature Algorithm (Ed- DSA)&quot;, Internet Engineering Task Force; RFC 8032 (Informational); IETF, Jan- 2017.http://www.ietf.org/rfc/rfc8032.txt</p>
+</li>
+<li>
+<p><a name="ref_8"></a> J. Salowey, A. Choudhury, and D. McGrew, &quot;AES Galois Counter Mode (GCM) Cipher Suites for TLS&quot;, Internet Engineering Task Force; RFC 5288 (Standards Track); IETF, August 2008. https://www.ietf.org/rfc/rfc5288.txt</p>
+</li>
+<li>
+<p><a name="ref_9"></a> H. Krawczyk and P. Eronen &quot;HMAC-based Extract-and-Expand Key Derivation Function (HKDF)&quot;, Internet Engineering Task Force; RFC 5869 (Informational); IETF, May-2010. https://tools.ietf.org/html/rfc5869</p>
+</li>
+<li>
+<p><a name="ref_10"></a> A collection of implementations of curve25519, an elliptic curve Diffie Hellman primitive &quot;curve25519-donna&quot;, https://github.com/agl/curve25519-donna/tree/master</p>
+</li>
+<li>
+<p><a name="ref_11"></a> ARM mbed &quot;mbed TLS&quot;, https://tls.mbed.org</p>
+</li>
+<li>
+<p><a name="ref_12"></a>  Post-quantum Cryptography Standardization ‌https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization</p>
+</li>
+<li>
+<p><a name="ref_13"></a> ‌Kyber, https://pq-crystals.org/kyber/index.shtml</p>
+</li>
+<li>
+<p><a name="ref_14"></a> Classic McEliece, https://classic.mceliece.org/nist.html</p>
+</li>
+<li>
+<p><a name="ref_15"></a> Dilithium, https://pq-crystals.org/dilithium</p>
+</li>
+<li>
+<p><a name="ref_16"></a> Jacqueline Brendel , Marc Fischlin , Felix Günther , Christian Janson , Douglas Stebila Authors Info &amp; Claims “Towards Post-Quantum Security for Signal's X3DH Handshake”, Selected Areas in Cryptography: 27th International Conference, Halifax, NS, Canada (Virtual Event), October 21-23, 2020, Revised Selected PapersOct 2020 Pages 404–430.</p>
+</li>
+<li>
+<p><a name="ref_17"></a> Jacqueline Brendel and Rune Fiedler and Felix Günther and Christian Janson and Douglas Stebila, “Post-quantum Asynchronous Deniable Key Exchange and the Signal Handshake”, IACR-PKC, 2022.</p>
+</li>
+<li>
+<p><a name="ref_18"></a> Keitaro Hashimoto and Shuichi Katsumata and Kris Kwiatkowski and Thomas Prest, “An Efficient and Generic Construction for Signal’s Handshake (X3DH): Post-Quantum, State Leakage Secure, and Deniable”, IACR-JOC, 2022.</p>
+</li>
+<li>
+<p><a name="ref_19"></a> ‌SKISSM opensource project, https://github.com/e2eelab/skissm</p>
+</li>
+<li>
+<p><a name="ref_20"></a> Matthew Weidner, Martin Kleppmann, Daniel Hugenroth, Alastair R. Beresford, &quot;Key Agreement for Decentralized Secure Group Messaging with Strong Security Guarantees&quot;, 2021.</p>
+</li>
+<li>
+<p><a name="ref_21"></a> PQClean, https://github.com/PQClean/PQClean</p>
+</li>
+</ol>
+
+</body>
+</html>
