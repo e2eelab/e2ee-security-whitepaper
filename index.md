@@ -5,7 +5,7 @@ toc_max_heading_level: 5
 
 # E2EE Security v1.5.0
 
-End-to-End Security Whitepaper
+End-to-End Encryption Security Whitepaper
 
 ![image](img/head.svg)
 
