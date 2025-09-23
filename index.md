@@ -44,7 +44,7 @@ The extensible software architecture \[Fig.1\] implemented by E2EE Security has 
 
 A cipher suite in E2EE Security is a software interface constructed by the following cryptographic functions. E2EE Security provides an implementation that utilizes the curve25519-donna[\[10\]](#ref_10), mbed TLS [\[11\]](#ref_11) library, and PQClean [\[21\]](#ref_21).
 
-* **get\_crypto\_param**
+* **get\_param**
 
     Get the parameters of the cipher suite.
 
@@ -52,13 +52,9 @@ A cipher suite in E2EE Security is a software interface constructed by the follo
 
     Generate a random key pair that will be used to calculate shared secret keys.
 
-* **sign\_key\_gen**
+* **ds\_key\_gen**
 
     Generate a random key pair that will be used to generate or verify a signature.
-
-* **ss\_key\_gen**
-
-    Calculate shared secret key.
 
 * **encrypt**
 
@@ -88,27 +84,28 @@ A cipher suite in E2EE Security is a software interface constructed by the follo
 
     Create a hash.
 
-The default cipher suite in the E2EE Security is **E2EE\_CIPHER\_DILITHIUM5\_KYBER1024\_AES256\_GCM\_SHA2\_256**, which contains Kyber[\[13\]](#ref_13), Dilithium5[\[18\]](#ref_18), AES256-GCM, SHA2-256.
+The default cipher suite in the E2EE Security is **E2EE\_CIPHER\_MLDSA87\_MLKEM1024\_AES256\_GCM\_SHA2\_256**, which contains Kyber[\[13\]](#ref_13), Dilithium5[\[18\]](#ref_18), AES256-GCM, SHA2-256.
 
 ### Key Size
 
 |  (bytes)  |  public key  |  secret key  |  ciphertext  |
 | --------- | --------- | -------- | ------- |
-|  kyber512  |  800  |  1632  |  768  |
-|  kyber768  |  1184  |  2400  |  1088  |
-|  kyber1024  |  1568  |  3168  |  1568  |
+|  mlkem512  |  800  |  1632  |  768  |
+|  mlkem768  |  1184  |  2400  |  1088  |
+|  mlkem1024  |  1568  |  3168  |  1568  |
 
 |  (bytes)  |  secret key  |  public key  |  signature  |
 | --------- | --------- | -------- | ------- |
-|  Dilithium2  |  2528  |  1312  |  2420  |
-|  Dilithium3  |  4000  |  1952  |  3293  |
-|  Dilithium5  |  4864  |  2592  |  4595  |
+|  mldsa44  |  2560  |  1312  |  2420  |
+|  mldsa65  |  4032  |  1952  |  3309  |
+|  mldsa87  |  4896  |  2592  |  4627  |
 
 ### Plugins‌
 
 E2EE Security implements a plugin interface to achieve module flexibility for engaging variant application platforms. There are four kinds of plugin handlers \[Fig.2\]:
 
 <p align="center">
+
 ![image](img/plugins.svg)
 
 Fig.2: E2EE Security plugin interface
@@ -135,6 +132,7 @@ Fig.2: E2EE Security plugin interface
 To specify an end point address for end-to-end encryption, E2EE Security provides an E2eeAddress struct to represent user address or group address as shown in \[Fig.3\]. An E2eeAddress with PeerUser type is obtained from E2EE server after user registration. The PeerUser data is specified by a user\_id that is created uniquely by the server and a device\_id that is provided by a user. An alternative E2eeAddress with PeerGroup type is obtained from E2EE server after group creation. The PeerGroup data is specified by a uniquely assigned group\_id from server. The uniqueness of user\_id and group\_id is assured in the scope of the same server domain while the uniqueness of device\_id is kept by user application.
 
 <p align="center">
+
 ![image](img/e2ee_address.svg)
 
 Fig.3: E2eeAddress struct
@@ -147,6 +145,7 @@ An account keeps user’s address and three types of keys that are used by E2EE 
 Moreover, the SignedPreKey has a special time-to-live (ttl) attribute that helps remember the the next renew time. E2EE Security implements 7 days as the default renewal time interval. On each begin time of E2EE Security activation, the module will check this “ttl”. If it is reached then the “publish signed pre-key” protocol will be requested to submit the public part of newly generated signed pre-key. E2EE server will update the key and use it subsequently to provide clients with PreKeyBundle for creating a new outbound session.
 
 <p align="center">
+
 ![image](img/account.svg)
 
 Fig.4: Account struct
@@ -157,6 +156,7 @@ Fig.4: Account struct
 Before a user application can build an outbound session, the “get pre-key bundle” protocol will be used to download the data set that encloses pre-key bundles \[Fig.5\]. To get the pre-key bundles of a peer user with given user\_id, E2EE server will gather a list of pre-key bundles with which is related to each device\_id of the same user\_id. A PreKeyBundle just collects the public part of an identity key, a signed pre-key and an one-time pre-key. The E2EE server will remove the used one-time pre-keys after sending the collected pre-key bundles as a response.
 
 <p align="center">
+
 ![image](img/prekey_bundle.svg)
 
 Fig.5: PreKeyBundle struct
@@ -169,6 +169,7 @@ A Session struct \[Fig.6\] is used to encapsulate the states of one-to-one messa
 Each session has a “ratchet” attribute with Ratchet struct that maintains the ratchet states [\[3\]](#ref_3) for either inbound or outbound usage. If a ratchet is used for managing outbound session, then it will be operated with a sender chain that has ratchet\_key to assign that an outbound message belongs to this chain, and a “ratchet” attribute to generate message key for encrypting outbound message. On the other hand, if a ratchet is used for managing inbound session, it will be operated with a receiver chain that has a “ratchet\_key\_public” attribute to identify the inbound message belongs to this chain, and a “chain\_key” attribute to generate message key to decrypt inbound message. The skipped messages chain helps maintain the message key that is skipped while an inbound session is performing decryption task over receiver chain. Moreover, each chain has a max chan index 512 as default by E2EE Security. If an outbound session with ratchet of sender chain reaches the limit, a new outbound session will be built as a replacement by using a new PreKeyBundle provided by server.
 
 <p align="center">
+
 ![image](img/session.svg)
 
 Fig.6: Session Struct
@@ -183,6 +184,7 @@ An outbound group session is created after a success request of “create group�
 The group members can be altered by requesting “add group members” and “remove group member” protocol. E2EE Security will automatically rebuild the outbound group session if the group members were changed. The inbound group session of each group member will also be rebuilt as a result.
   
 <p align="center">
+
 ![image](img/group_session.svg)
 
 Fig.7: GroupSession struct
@@ -241,6 +243,7 @@ Fig.7: GroupSession struct
 The key agreement process cannot complete at Alice’s side alone in the case of applying post quantum cryptographic (PQC) primitives [\[12\]](#ref_12)[\[13\]](#ref_13)[\[14\]](#ref_14)[\[15\]](#ref_15) that mainly work with key encapsulation mechanisms (KEM) [\[16\]](#ref_16)[\[17\]](#ref_17)[\[18\]](#ref_18). The flow for calculating the shared key for both Alice and Bob is altered by E2EE Security \[Fig.8\]. An invite message is sent on creating a new outbound session. The outbound session is not able to send encrypted messages before receiving an accept message and completing the calculation of shared key. E2EE Security implements “invite” and “accept” protocols as a compromise to enable PQKA to work in a uniform data flow for post quantum cryptographic primitives.
 
 <p align="center">
+
 ![image](img/invite_accept.svg)
 
 Fig.8: Invite and accept protocol
@@ -363,6 +366,7 @@ Each group member creates an outbound group session for encrypting and sending g
 * The group creator then send the seed secret to each group member by using one-to-one session. Each group member can build their own outbound group session by using the seed secret.
 
 <p align="center">
+
 ![image](img/group_creation.svg)
 
 Fig.9: Group session creation
@@ -371,6 +375,7 @@ Fig.9: Group session creation
 Also, the server needs to send the group members’ identity public key to all the other group members so that every group member can generate the corresponding inbound group sessions \[Fig.10\].
 
 <p align="center">
+
 ![image](img/chainkey_generation.svg)
 
 Fig.10: Chain key generation
@@ -389,6 +394,7 @@ To encrypt and send outbound group message, Alice uses the established outbound 
 Alice uses the outbound group session to ratchet ck for the next encryption.
 
 <p align="center">
+
 ![image](img/group_msg_delivery.svg)
 
 Fig.11: Group message delivery
@@ -409,6 +415,7 @@ Each group member uses their own inbound group session to ratchet ck for the nex
 When a new group member is added to the group, the other old group members need to send their current chain key to the new group member via one-to-one session so that this new group member can create corresponding inbound group sessions. On the other hand, the new group member creates his or her outbound group session with the inviter’s(the one who invites the new group member to join the group) chain key. Since all of the old group members have the inviter’s chain key, they can create the inbound group session that can be used to decrypt the new group member’s group message \[Fig.12\].
 
 <p align="center">
+
 ![image](img/add_group_members.svg)
 
 Fig.12: Add a group member
@@ -423,6 +430,7 @@ When some group members are removed, the group member who makes the changed even
 E2EE Security offers offers various request-response protocols and aids in managing server-sent messages \[Fig.13\]. The request-response protocols provide a direct control and message exchange mechanism for interacting with the E2EE server, enabling better integration with user applications. On the other hand, the server-sent events protocol efficiently notifies E2EE Security and keeps the states of accounts and sessions updated with the E2EE messaging schemes.
 
 <p align="center">
+
 ![image](img/protocol.svg)  
 
 Fig.13: E2EE protocols
@@ -434,7 +442,7 @@ Fig.13: E2EE protocols
 
 A response code indicates the response state from server for requesting a resource from client \[Fig.14\].
 
-* RESPONSE\_CODE\_UNKNOWN
+* RESPONSE\_CODE\_UNSPECIFIED
 
     The client get a requested response with unknown state.
 
@@ -491,6 +499,7 @@ A response code indicates the response state from server for requesting a resour
     The server is down for maintenance or overloaded.
 
 <p align="center">
+
 ![image](img/unary/response_codes.svg)
   
 Fig.14: Response code
@@ -501,6 +510,7 @@ Fig.14: Response code
 The register user protocol \[Fig.15\] helps create a new account in E2EE Security by sending RegisterUserRequest data. A unique user address will be returned in a successful response from E2EE server.
 
 <p align="center">
+
 ![image](img/unary/register.svg)
 
 Fig.15: Register user protocol
@@ -511,6 +521,7 @@ Fig.15: Register user protocol
 The publish signed pre-key protocol \[Fig.16\] helps submit a new signed pre-key to server when the 7 days renew time is exceed that is managed by Account in E2EE Security. E2EE server will keep and replace the old signed pre-key and use the new key to serve the request of “get pre-key bundle” protocol.
 
 <p align="center">
+
 ![image](img/unary/publish_spk.svg)
 
 Fig.16: Publish signed pre-key protocol
@@ -520,7 +531,8 @@ Fig.16: Publish signed pre-key protocol
 
 The supply one-time pre-key protocol \[Fig.17\] helps submit a set of one-time pre-key public parts to E2EE server. This is normally triggered by receiving a SupplyOpkMsg and notifying that server is running out of one-time pre-keys. E2EE Security will create 100 new one-time pre- keys and apply “supply one-time pre-key” protocol to complete the job.
 
-<p align="center">  
+<p align="center">
+
 ![image](img/unary/supply_opk.svg)
 
 Fig.17: Supply one-time pre-key protocol
@@ -531,6 +543,7 @@ Fig.17: Supply one-time pre-key protocol
 The get pre-key bundle protocol \[Fig.18\] helps download PreKeyBundle for creating a new outbound session. By sending a GetPreKeyBundleRequest data with “user\_adress”, E2EE server will return “pre\_key\_bundles” as an array of PreKeyBundle data. E2EE Security will process them and create respective outbound session fro each PreKeyBundle data.
 
 <p align="center">
+
 ![image](img/unary/get_prekey_bundle.svg)
 
 Fig.18: Get pre-key bundle protocol
@@ -541,6 +554,7 @@ Fig.18: Get pre-key bundle protocol
 The update user protocol \[Fig19\] helps user update user’s information by sending UpdateUserRequest data. E2EE server authenticate the user\_id and publish a ProtoMsg to the server-sent messaging channel by packing the UpdateUserMsg data. The peer users who have applied “invite” protocol to this user\_id will receive this message if this channel is subscribed.
 
 <p align="center">
+
 ![image](img/unary/update_user.svg)
   
 Fig.19: Update user protocol
@@ -550,7 +564,8 @@ Fig.19: Update user protocol
 
 The invite protocol \[Fig.20\] helps send InviteMsg to a peer user while build a new outbound session. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the InviteMsg data. The peer user will receive this message if this channel is subscribed.
 
-<p align="center">  
+<p align="center">
+
 ![image](img/unary/invite.svg)  
 
 Fig.20: Invite protocol
@@ -561,6 +576,7 @@ Fig.20: Invite protocol
 The accept protocol \[Fig.21\] helps send AcceptMsg to a peer user after successfully builds a new inbound session. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the AcceptMsg data. The peer user will receive this message if this channel is subscribed.
 
 <p align="center">
+
 ![image](img/unary/accept.svg)
 
 Fig.21: Accept protocol
@@ -571,6 +587,7 @@ Fig.21: Accept protocol
 The send one-to-one message protocol \[Fig.24\] helps send an E2eeMsg data that has “one2one\_msg” as its payload to a remote peer user. E2EE server will publish a ProtoMsg to the server-sent messaging channel by packing the E2eeMsg data. The peer user will receive this message if this channel is subscribed.
 
 <p align="center">
+
 ![image](img/unary/send_one2one_msg.svg)
 
 Fig.24: Send one-to-one message protocol
@@ -581,6 +598,7 @@ Fig.24: Send one-to-one message protocol
 The create group protocol \[Fig.25\] helps send the CreateGroupMsg data while E2EE Security is creating a new outbound group session. E2EE server will publish a ProtoMsg to the server- sent messaging channel by packing the CreateGroupMsg data. The peer user will receive this message if this channel is subscribed. E2EE Security will send GroupPreKeyBundle data through one-to-one session to other group members after receiving a successful response. On the other hand, E2EE Security will help each group member who receives CreateGroupMsg data by creating new outbound group session automatically.
   
 <p align="center">
+
 ![image](img/unary/create_group.svg)
 
 Fig.25: Create group protocol
@@ -591,6 +609,7 @@ Fig.25: Create group protocol
 The add group members protocol \[Fig.26\] helps send the AddGroupMembersMsg data to other group members. If E2EE server verifies the user sending this request is a group member with manager role, a ProtoMsg will be published to the server-sent messaging channel by packing the AddGroupMembersMsg data. The peer user will receive this message if this channel is subscribed. The old outbound group session will be renewed after a successful response received. On the other hand, all other group members will also renew their old outbound group sessions on receiving the AddGroupMembersMsg data.
 
 <p align="center">
+
 ![image](img/unary/add_group_members.svg)
 
 Fig.26: Add group members protocol
@@ -601,6 +620,7 @@ Fig.26: Add group members protocol
 The remove group members protocol \[Fig.27\] helps send the RemoveGroupMembersMsg data to other group members. If E2EE server verifies the user sending this request is a group member with manager role, a ProtoMsg will be published to the server-sent messaging channel by packing the RemoveGroupMembersMsg data. The peer user will receive this message if this channel is subscribed. A new outbound group session will be rebuilt after a successful response received. On the other hand, all other group members will also rebuild a new outbound group session on receiving the RemoveGroupMembersMsg data.
 
 <p align="center">
+
 ![image](img/unary/remove_group_members.svg)
 
 Fig.27: Remove group members protocol
@@ -611,6 +631,7 @@ Fig.27: Remove group members protocol
 The add group member device protocol \[Fig.28\] helps send the AddGroupMemberDeviceMsg data to other group members. If E2EE server verifies the user sending this request is a group member, a ProtoMsg will be published to the server-sent messaging channel by packing the AddGroupMemberDeviceMsg data. The peer user will receive this message if this channel is subscribed. The old outbound group session will be renewed after a successful response received. On the other hand, all other group members will also renew their old outbound group sessions on receiving the AddGroupMemberDeviceMsg data.
 
 <p align="center">
+
 ![image](img/unary/add_group_member_device.svg)
 
 Fig.28: Add group member device protocol
@@ -621,6 +642,7 @@ Fig.28: Add group member device protocol
 The leave group protocol \[Fig.29\] helps send the LeaveGroupMsg data to the group manager. If E2EE server verifies the user sending this request is a group member, a ProtoMsg will be published to the server-sent messaging channel by packing the LeaveGroupMsg data. The peer user will receive this message if this channel is subscribed. The original outbound and inbound group sessions will be released after a successful response received. On the other hand, the group manager will activate the remove group members protocol on receiving the LeaveGroupMsg data.
   
 <p align="center">
+
 ![image](img/unary/leave_group.svg)
 
 Fig.29: Leave group protocol
@@ -631,6 +653,7 @@ Fig.29: Leave group protocol
 The send group message protocol \[Fig.30\] helps send an E2eeMsg data that has “group\_msg” as its payload to a remote peer user. E2EE server will create a ProtoMsg by packing the E2eeMsg data and replicate it for each address of all other members. Then publish each E2eeMsg to the server-sent messaging channel. The peer user will receive this message if this channel is subscribed.
 
 <p align="center">
+
 ![image](img/unary/send_group_msg.svg)
 
 Fig.30: Send group message protocol
@@ -641,6 +664,7 @@ Fig.30: Send group message protocol
 The consume ProtoMsg protocol \[Fig.31\] helps notify E2EE server that a ProtoMsg with pro\_msg\_id has been successfully processed by E2EE Security. E2EE server will remove the ProtoMsg that is stored in server database and return a successful response.
 
 <p align="center">
+
 ![image](img/unary/consume_proto_msg.svg)
 
 Fig.31: Consume ProtoMsg protocol
@@ -651,6 +675,7 @@ Fig.31: Consume ProtoMsg protocol
 The message sent from E2EE server through the server-sent messaging channel is encapsulated in ProtoMsg struct \[Fig.32\]. In addition to “from” and “to” address, a ProtoMsg is also tagged with a unique protocol message id and a time stamp by server. The payload of a ProtoMsg is specified by a variety of message types that help E2EE Security to manage and update the respective session and account states.
 
 <p align="center">
+
 ![image](img/stream/proto_msg.svg)
 
 Fig.32: Message struct of ProtoMsg
@@ -661,6 +686,7 @@ Fig.32: Message struct of ProtoMsg
 A ProtoMsg with SupplyOpkMsg payload \[Fig.33\] is sent from E2EE server when a user’s one-time pre-keys are running out. E2EE Security will apply “supply one-time pre-key” protocol on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/supply_opk_msg.svg)
 
 Fig.33: SupplyOpkMsg
@@ -671,6 +697,7 @@ Fig.33: SupplyOpkMsg
 A ProtoMsg with InviteMsg payload \[Fig.34\] is received from server-sent channel when some user apply “invite” protocol to E2EE server. E2EE Security will create an inbound session and apply “accept” protocol on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/invite_msg.svg)
 
 Fig.34: InviteMsg‌
@@ -681,6 +708,7 @@ Fig.34: InviteMsg‌
 A ProtoMsg with AcceptMsg payload\[Fig.35\] is received from server-sent channel when some user apply “accept” protocol to E2EE server. E2EE Security will completing the creation of an outbound session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/accept_msg.svg)
 
 Fig.35: AcceptMsg
@@ -691,6 +719,7 @@ Fig.35: AcceptMsg
 A ProtoMsg with NewUserDeviceMsg payload \[Fig.36\] is received from server-sent channel when some user apply “register user” protocol with new “devide\_id” for a registered user\_id to E2EE server. After a successful authentication, E2EE server will replicate and send this type of message to all the addresses that have been apply “invite” protocol to the same user\_id. E2EE Security will create a new outbound session by applying “invite” protocol on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/add_user_device_msg.svg)
 
 Fig.36: NewUserDeviceMsg
@@ -711,6 +740,7 @@ A ProtoMsg with E2eeMsg payload \[Fig.37\] is received from server-sent channel 
 The ciphertext is managed with Double Ratchet Algorithm [\[3\]](#ref_3). E2EE Security implement a Plaintext message to mediate the transmission of common message data from user application and group pre-key data from E2EE Security. A user application should use Plaintext with “common\_msg” payload. E2EE Security will create an inbound group session on receiving an E2eeMsg with GroupPreKeyBundle data as its payload. In this case of E2eeMsg with payload in GroupMsgPayload type should only carry a ciphertext that is encrypted from a Plaintext message with “common\_msg” payload.
 
 <p align="center">
+
 ![image](img/stream/e2ee_msg.svg)
 
 Fig.37: E2eeMsg struct
@@ -721,6 +751,7 @@ Fig.37: E2eeMsg struct
 A ProtoMsg with CreateGroupMsg payload \[Fig.38\] is received from server-sent channel when some user apply “create group” protocol to E2EE server. E2EE Security will create a new outbound group session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/create_group_msg.svg)  
 
 Fig.38: CreateGroupMsg
@@ -731,6 +762,7 @@ Fig.38: CreateGroupMsg
 A ProtoMsg with AddGroupMembers payload \[Fig.39\] is received from server-sent channel some group member with manager role apply “add group members” protocol to E2EE server. E2EE Security will update the original group sessions on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/add_group_members_msg.svg)
 
 Fig.39: AddGroupMembersMsg
@@ -741,6 +773,7 @@ Fig.39: AddGroupMembersMsg
 A ProtoMsg with RemoveGroupMembers payload \[Fig.40\] is received from server-sent channel when some group member with manager role apply “remove group members” protocol to E2EE server. E2EE Security will create a new outbound group session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/remove_group_members_msg.svg)
 
 Fig.40: RemoveGroupMembersMsg
@@ -751,6 +784,7 @@ Fig.40: RemoveGroupMembersMsg
 A ProtoMsg with AddGroupMemberDeviceMsg payload \[Fig.41\] is received from server-sent channel when some group member with manager role apply “add group member device” protocol to E2EE server. E2EE Security will update the group session with the same group address on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/add_group_member_device_msg.svg)
 
 Fig.41: AddGroupMemberDeviceMsg
@@ -761,6 +795,7 @@ Fig.41: AddGroupMemberDeviceMsg
 A ProtoMsg with LeaveGroupMsg payload \[Fig.42\] is received from server-sent channel when some group member applies “leave group” protocol to E2EE server. E2EE Security will create a new outbound group session on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/leave_group_msg.svg)
 
 Fig.42: LeaveGroupMsg
@@ -771,6 +806,7 @@ Fig.42: LeaveGroupMsg
 A ProtoMsg with ServerHertbeatMsg payload \[Fig.43\] is received from server-sent channel in a time interval periodically. User application can keep noticed about service availability. It is not needed to report the consumption state of this message type.
 
 <p align="center">
+
 ![image](img/stream/server_heartbeat_msg.svg)
 
 Fig.43: ServerHeartbeatMsg
@@ -781,6 +817,7 @@ Fig.43: ServerHeartbeatMsg
 A ProtoMsg with UpdateUserMsg payload \[Fig.44\] is received from server-sent channel when some user apply “update user” protocol to E2EE server. All the users that have apply “invite” protocol to this user will receive this message. User application just update the user information on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/update_user_msg.svg)
 
 Fig.44: UpdateUserMsg
@@ -791,6 +828,7 @@ Fig.44: UpdateUserMsg
 A ProtoMsg with GroupManagerMsg payload \[Fig.45\] is sent from E2EE server when there is a group notification to be delivered. User application will get notified on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/group_manager_msg.svg)  
 
 Fig.45: GroupManagerMsg
@@ -801,6 +839,7 @@ Fig.45: GroupManagerMsg
 A ProtoMsg with SystemManagerMsg payload \[Fig.46\] is sent from E2EE server when there is a system notification to be delivered. User application will get notified on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/system_manager_msg.svg)  
 
 Fig.46: SystemManagerMsg
@@ -811,6 +850,7 @@ Fig.46: SystemManagerMsg
 A ProtoMsg with FriendManagerMsg payload \[Fig.47\] is sent from E2EE server when there is a friend operation to be delivered. User application will get notified on receiving this message, then apply “consume ProtoMsg” protocol to report a successful server-sent message consumption.
 
 <p align="center">
+
 ![image](img/stream/friend_manager_msg.svg)
 
 Fig.47: FriendManagerMsg
