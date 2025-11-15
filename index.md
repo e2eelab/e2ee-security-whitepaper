@@ -3,7 +3,7 @@ toc_min_heading_level: 2
 toc_max_heading_level: 5
 ---
 
-# E2EE Security v1.5.0
+# E2EE Security v1.5.2
 
 End-to-End Encryption Security Whitepaper
 
@@ -157,7 +157,7 @@ Before a user application can build an outbound session, the “get pre-key bund
 
 <p align="center">
 
-![image](img/prekey_bundle.svg)
+![image](img/pre_key_bundle.svg)
 
 Fig.5: PreKeyBundle struct
 </p>
@@ -544,7 +544,7 @@ The get pre-key bundle protocol \[Fig.18\] helps download PreKeyBundle for creat
 
 <p align="center">
 
-![image](img/unary/get_prekey_bundle.svg)
+![image](img/unary/get_pre_key_bundle.svg)
 
 Fig.18: Get pre-key bundle protocol
 </p>
